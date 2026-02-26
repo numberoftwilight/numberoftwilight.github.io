@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-width=1.0">
+    <title>Twilight Perfume Globe</title>
+    
+    <script src="https://unpkg.com/three"></script>
+    <script src="https://unpkg.com/globe.gl"></script>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            /* 황혼(Twilight) 느낌의 배경 그라데이션 */
+            background: linear-gradient(135deg, #1a0b2e 0%, #4b1d52 50%, #c84b31 100%);
+            font-family: 'Pretendard', -apple-system, sans-serif;
+            overflow: hidden; /* 스크롤바 숨김 */
+            color: white;
+        }
+
+        #globeViz {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* 지역 이름 호버 시 나타나는 툴팁 디자인 */
+        .scene-tooltip {
+            background: rgba(20, 10, 30, 0.8) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            border-radius: 12px !important;
+            padding: 12px 18px !important;
+            font-family: 'Pretendard', sans-serif !important;
+            backdrop-filter: blur(10px) !important;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6) !important;
+        }
+
+        /* 영상이 뜨는 팝업(모달) 창 - 글래스모피즘 적용 */
+        #videoModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 700px;
+            background: rgba(26, 11, 46, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            text-align: center;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 28px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .close-btn:hover {
+            color: #ff9a9e;
+        }
+
+        #perfumeVideo {
+            width: 100%;
+            border-radius: 12px;
+            margin-top: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .modal-title {
+            font-size: 26px;
+            font-weight: 700;
+            margin: 0 0 5px 0;
+            background: linear-gradient(to right, #ff9a9e 0%, #fecfef 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="globeViz"></div>
+
+    <div id="videoModal">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <div class="modal-title">Kanazawa, Japan</div>
+        <p style="color: #ccc; font-size: 15px; margin-bottom: 20px;">바람을 입다, 가나자와를 기억하다 (MEMORY 1 : KANAZAWA OF WIND)</p>
+        
+        <video id="perfumeVideo" controls>
+            <source src="KakaoTalk_20260225_175616729.mp4" type="video/mp4">
+            브라우저가 영상을 지원하지 않습니다.
+        </video>
+    </div>
+
+    <script>
+        // 📍 향수 데이터 (위도, 경도, 이름, 향기 설명)
+        const perfumeLocations = [
+            { lat: 36.5613, lng: 136.6562, name: '가나자와 (Kanazawa)', desc: '바람을 타고 오는 은은한 향', id: 'kanazawa' },
+            { lat: 48.8566, lng: 2.3522, name: '파리 (Paris)', desc: '해질녘 센 강변의 로맨틱한 머스크 향', id: 'paris' },
+            { lat: 40.7128, lng: -74.0060, name: '뉴욕 (New York)', desc: '새벽 도시의 차갑고 세련된 우디 향', id: 'ny' }
+        ];
+
+        // 🌍 3D 지구본 생성 설정
+        const world = Globe()
+            (document.getElementById('globeViz'))
+            .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg') // 밤 느낌의 지구 표면 이미지
+            .backgroundColor('rgba(0,0,0,0)') // CSS 황혼 그라데이션이 보이게 투명 처리
+            .pointsData(perfumeLocations)
+            .pointAltitude(0.05)
+            .pointColor(() => '#ffb703') // 마커 색상 (황혼에 어울리는 은은한 오렌지 골드)
+            .pointResolution(2)
+            .pointRadius(0.6) // 마커 크기
+            .pointLabel(d => `
+                <div style="text-align: center;">
+                    <strong style="color:#ffb703; font-size:16px;">${d.name}</strong><br>
+                    <span style="font-size:13px; color:#ddd;">${d.desc}</span><br>
+                    <i style="font-size:11px; color:#ff9a9e; margin-top:8px; display:inline-block;">클릭하여 향수 영상 보기 ✨</i>
+                </div>
+            `)
+            .onPointClick(d => {
+                // 클릭한 지역이 가나자와일 때만 모달 오픈
+                if(d.id === 'kanazawa') {
+                    openModal();
+                } else {
+                    alert(d.name + ' 지역의 향수는 조향 중입니다. 🌙');
+                }
+            });
+
+        // 초기 카메라 위치 (아시아 쪽으로 부드럽게 시작)
+        world.pointOfView({ lat: 35, lng: 135, altitude: 2 });
+
+        // 은은하게 지구가 자동 회전하는 효과
+        world.controls().autoRotate = true;
+        world.controls().autoRotateSpeed = 0.5;
+
+        // 🎥 모달 및 영상 제어 스크립트
+        const modal = document.getElementById('videoModal');
+        const video = document.getElementById('perfumeVideo');
+
+        function openModal() {
+            modal.style.display = 'block';
+            video.play(); // 창이 열리면 부드럽게 자동 재생
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+            video.pause(); // 창 닫으면 영상 일시정지
+            video.currentTime = 0; // 영상 처음으로 되감기
+        }
+    </script>
+</body>
+</html>
