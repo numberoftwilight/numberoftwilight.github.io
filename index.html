@@ -2,9 +2,13 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-width=1.0">
-    <title>Twilight Perfume Globe</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twilight Perfume | Memory of Wind</title>
     
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Pretendard:wght@200;300;400&display=swap');
+    </style>
+
     <script src="https://unpkg.com/three"></script>
     <script src="https://unpkg.com/globe.gl"></script>
     
@@ -12,11 +16,47 @@
         body {
             margin: 0;
             padding: 0;
-            /* 황혼(Twilight) 느낌의 배경 그라데이션 */
-            background: linear-gradient(135deg, #1a0b2e 0%, #4b1d52 50%, #c84b31 100%);
-            font-family: 'Pretendard', -apple-system, sans-serif;
-            overflow: hidden; /* 스크롤바 숨김 */
+            /* 럭셔리 황혼: 딥 미드나잇 블루 & 다크 플럼의 은은한 그라데이션이 움직임 */
+            background: linear-gradient(135deg, #050408, #160a17, #24121e, #080a12);
+            background-size: 300% 300%;
+            animation: breath 15s ease-in-out infinite;
+            font-family: 'Pretendard', sans-serif;
+            overflow: hidden;
             color: white;
+        }
+
+        /* 배경이 천천히 움직이는 애니메이션 */
+        @keyframes breath {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 브랜드 타이틀 (고급 향수병 라벨 느낌) */
+        .brand-header {
+            position: absolute;
+            top: 50px;
+            left: 60px;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .brand-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            letter-spacing: 10px;
+            font-weight: 400;
+            margin: 0;
+            color: #ebd5c1; /* 샴페인 골드 색상 */
+        }
+
+        .brand-header p {
+            font-family: 'Pretendard', sans-serif;
+            font-size: 11px;
+            letter-spacing: 5px;
+            opacity: 0.4;
+            margin-top: 12px;
+            font-weight: 200;
         }
 
         #globeViz {
@@ -24,137 +64,132 @@
             height: 100vh;
         }
 
-        /* 지역 이름 호버 시 나타나는 툴팁 디자인 */
+        /* 툴팁 디자인: 훨씬 얇고 세련되게 */
         .scene-tooltip {
-            background: rgba(20, 10, 30, 0.8) !important;
-            border: 1px solid rgba(255, 255, 255, 0.2) !important;
-            border-radius: 12px !important;
-            padding: 12px 18px !important;
-            font-family: 'Pretendard', sans-serif !important;
-            backdrop-filter: blur(10px) !important;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.6) !important;
+            background: rgba(10, 5, 12, 0.7) !important;
+            backdrop-filter: blur(15px) !important;
+            border: 1px solid rgba(235, 213, 193, 0.2) !important;
+            border-radius: 2px !important;
+            padding: 16px 20px !important;
         }
 
-        /* 영상이 뜨는 팝업(모달) 창 - 글래스모피즘 적용 */
+        /* 영상 모달창: 베젤을 줄이고 영화처럼 */
         #videoModal {
             display: none;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 80%;
-            max-width: 700px;
-            background: rgba(26, 11, 46, 0.75);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            width: 90%;
+            max-width: 850px;
+            background: rgba(5, 3, 8, 0.85);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(235, 213, 193, 0.15);
+            padding: 40px 50px;
             z-index: 1000;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9);
             text-align: center;
         }
 
         .close-btn {
             position: absolute;
-            top: 15px;
-            right: 25px;
-            font-size: 28px;
-            color: rgba(255, 255, 255, 0.7);
+            top: 25px;
+            right: 35px;
+            font-family: 'Pretendard', sans-serif;
+            font-size: 12px;
+            letter-spacing: 2px;
             cursor: pointer;
-            transition: 0.3s;
+            opacity: 0.4;
+            transition: 0.4s ease;
         }
 
-        .close-btn:hover {
-            color: #ff9a9e;
-        }
+        .close-btn:hover { opacity: 1; color: #ebd5c1; }
 
         #perfumeVideo {
             width: 100%;
-            border-radius: 12px;
-            margin-top: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            outline: none;
+            border-radius: 4px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .modal-title {
-            font-size: 26px;
-            font-weight: 700;
-            margin: 0 0 5px 0;
-            background: linear-gradient(to right, #ff9a9e 0%, #fecfef 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 34px;
+            margin-bottom: 8px;
+            color: #ebd5c1;
+            letter-spacing: 2px;
         }
     </style>
 </head>
 <body>
 
+    <div class="brand-header">
+        <h1>NUMBER OF TWILIGHT</h1>
+        <p>SCENT OF THE WORLD GAZE</p>
+    </div>
+
     <div id="globeViz"></div>
 
     <div id="videoModal">
-        <span class="close-btn" onclick="closeModal()">&times;</span>
-        <div class="modal-title">Kanazawa, Japan</div>
-        <p style="color: #ccc; font-size: 15px; margin-bottom: 20px;">바람을 입다, 가나자와를 기억하다 (MEMORY 1 : KANAZAWA OF WIND)</p>
+        <span class="close-btn" onclick="closeModal()">CLOSE ✕</span>
+        <div class="modal-title">Kanazawa</div>
+        <p style="letter-spacing: 2px; font-weight: 200; font-size: 13px; color: #aaa; margin-bottom: 30px;">
+            MEMORY 1 : KANAZAWA OF WIND
+        </p>
         
         <video id="perfumeVideo" controls>
             <source src="KakaoTalk_20260225_175616729.mp4" type="video/mp4">
-            브라우저가 영상을 지원하지 않습니다.
         </video>
     </div>
 
     <script>
-        // 📍 향수 데이터 (위도, 경도, 이름, 향기 설명)
         const perfumeLocations = [
-            { lat: 36.5613, lng: 136.6562, name: '가나자와 (Kanazawa)', desc: '바람을 타고 오는 은은한 향', id: 'kanazawa' },
-            { lat: 48.8566, lng: 2.3522, name: '파리 (Paris)', desc: '해질녘 센 강변의 로맨틱한 머스크 향', id: 'paris' },
-            { lat: 40.7128, lng: -74.0060, name: '뉴욕 (New York)', desc: '새벽 도시의 차갑고 세련된 우디 향', id: 'ny' }
+            { lat: 36.5613, lng: 136.6562, name: 'KANAZAWA', desc: '바람을 타고 오는 은은한 향', id: 'kanazawa' }
         ];
 
-        // 🌍 3D 지구본 생성 설정
         const world = Globe()
             (document.getElementById('globeViz'))
-            .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg') // 밤 느낌의 지구 표면 이미지
-            .backgroundColor('rgba(0,0,0,0)') // CSS 황혼 그라데이션이 보이게 투명 처리
+            .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
+            .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
+            .backgroundColor('rgba(0,0,0,0)')
+            .showAtmosphere(true) 
+            .atmosphereColor('#ebd5c1') /* 대기 색상도 샴페인 골드로 고급스럽게 */
+            .atmosphereAltitude(0.12)
             .pointsData(perfumeLocations)
-            .pointAltitude(0.05)
-            .pointColor(() => '#ffb703') // 마커 색상 (황혼에 어울리는 은은한 오렌지 골드)
-            .pointResolution(2)
-            .pointRadius(0.6) // 마커 크기
+            .pointAltitude(0.06)
+            .pointColor(() => '#ebd5c1')
+            .pointRadius(0.8)
             .pointLabel(d => `
-                <div style="text-align: center;">
-                    <strong style="color:#ffb703; font-size:16px;">${d.name}</strong><br>
-                    <span style="font-size:13px; color:#ddd;">${d.desc}</span><br>
-                    <i style="font-size:11px; color:#ff9a9e; margin-top:8px; display:inline-block;">클릭하여 향수 영상 보기 ✨</i>
+                <div style="text-align: center; color: white;">
+                    <span style="font-family: 'Playfair Display', serif; font-size:18px; letter-spacing:4px; color:#ebd5c1;">${d.name}</span><br>
+                    <div style="width:1px; height:15px; background:rgba(235, 213, 193, 0.3); margin:10px auto;"></div>
+                    <span style="font-family: 'Pretendard', sans-serif; font-size:11px; font-weight:200; opacity:0.7; letter-spacing:1px;">${d.desc}</span>
                 </div>
             `)
             .onPointClick(d => {
-                // 클릭한 지역이 가나자와일 때만 모달 오픈
-                if(d.id === 'kanazawa') {
-                    openModal();
-                } else {
-                    alert(d.name + ' 지역의 향수는 조향 중입니다. 🌙');
-                }
+                if(d.id === 'kanazawa') openModal();
             });
 
-        // 초기 카메라 위치 (아시아 쪽으로 부드럽게 시작)
-        world.pointOfView({ lat: 35, lng: 135, altitude: 2 });
+        // 은은한 별빛
+        world.starPositions([...Array(2000)].map(() => [(Math.random()-0.5)*1000, (Math.random()-0.5)*1000, (Math.random()-0.5)*1000]));
 
-        // 은은하게 지구가 자동 회전하는 효과
+        world.pointOfView({ lat: 35, lng: 135, altitude: 2.2 });
         world.controls().autoRotate = true;
-        world.controls().autoRotateSpeed = 0.5;
+        world.controls().autoRotateSpeed = 0.4; 
 
-        // 🎥 모달 및 영상 제어 스크립트
         const modal = document.getElementById('videoModal');
         const video = document.getElementById('perfumeVideo');
 
         function openModal() {
             modal.style.display = 'block';
-            video.play(); // 창이 열리면 부드럽게 자동 재생
+            video.play();
         }
 
         function closeModal() {
             modal.style.display = 'none';
-            video.pause(); // 창 닫으면 영상 일시정지
-            video.currentTime = 0; // 영상 처음으로 되감기
+            video.pause();
+            video.currentTime = 0;
         }
     </script>
 </body>
