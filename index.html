@@ -28,18 +28,36 @@
             100% { background-position: 0% 50%; }
         }
 
+        /* 왼쪽 상단 브랜드 로고 */
         .brand-header { position: absolute; top: 50px; left: 60px; z-index: 10; pointer-events: none; }
         .brand-header h1 { font-family: 'Playfair Display', serif; font-size: 28px; letter-spacing: 10px; font-weight: 400; margin: 0; color: #ebd5c1; }
         .brand-header p { font-size: 11px; letter-spacing: 5px; opacity: 0.4; margin-top: 12px; font-weight: 200; }
 
+        /* 🔍 우측 상단 검색창 디자인 */
+        .search-container {
+            position: absolute; top: 50px; right: 60px; z-index: 10;
+            display: flex; gap: 10px; align-items: center;
+        }
+        .search-input {
+            background: rgba(10, 5, 12, 0.5); border: 1px solid rgba(235, 213, 193, 0.3);
+            border-radius: 2px; padding: 8px 15px; color: #ebd5c1; font-family: 'Pretendard', sans-serif;
+            font-size: 12px; letter-spacing: 1px; width: 150px; outline: none; transition: 0.3s;
+            backdrop-filter: blur(5px);
+        }
+        .search-input:focus { border-color: #ebd5c1; width: 180px; }
+        .search-input::placeholder { color: rgba(235, 213, 193, 0.4); }
+        .search-btn {
+            background: transparent; border: 1px solid rgba(235, 213, 193, 0.3);
+            color: #ebd5c1; padding: 8px 15px; cursor: pointer; border-radius: 2px;
+            font-family: 'Playfair Display', serif; font-size: 12px; letter-spacing: 2px; transition: 0.3s;
+        }
+        .search-btn:hover { background: rgba(235, 213, 193, 0.1); border-color: #ebd5c1; }
+
         #globeViz { width: 100vw; height: 100vh; }
 
         .scene-tooltip {
-            background: rgba(10, 5, 12, 0.7) !important;
-            backdrop-filter: blur(15px) !important;
-            border: 1px solid rgba(235, 213, 193, 0.2) !important;
-            border-radius: 2px !important;
-            padding: 16px 20px !important;
+            background: rgba(10, 5, 12, 0.7) !important; backdrop-filter: blur(15px) !important;
+            border: 1px solid rgba(235, 213, 193, 0.2) !important; border-radius: 2px !important; padding: 16px 20px !important;
         }
 
         #videoModal {
@@ -66,6 +84,11 @@
         <p>SCENT OF THE WORLD GAZE</p>
     </div>
 
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-input" placeholder="City or Country..." onkeypress="handleEnter(event)">
+        <button class="search-btn" onclick="searchLocation()">SEARCH</button>
+    </div>
+
     <div id="globeViz"></div>
 
     <div id="videoModal">
@@ -81,23 +104,22 @@
     </div>
 
     <script>
-        // 🚨 지역 추가는 무조건 여기서만 하시면 됩니다! 🚨
+        // 🚨 여기에 가나자와와 지우펀 데이터가 모두 들어있습니다!
         const perfumeLocations = [
             { 
                 lat: 36.5613, lng: 136.6562, 
-                name: 'KANAZAWA', 
+                name: 'KANAZAWA', searchKeywords: ['가나자와', '일본', 'JAPAN', 'KANAZAWA'],
                 desc: '바람을 타고 오는 은은한 향', 
                 memoryText: 'MEMORY 1 : KANAZAWA OF WIND', 
                 videoSrc: 'KakaoTalk_20260225_175616729.mp4' 
             },
-            // 예시: 새로운 지역 추가하려면 아래 주석(//)을 지우고 내용만 바꿔서 쓰세요!
-            // { 
-            //     lat: 48.8566, lng: 2.3522, 
-            //     name: 'PARIS', 
-            //     desc: '해질녘 센 강변의 로맨틱한 머스크 향', 
-            //     memoryText: 'MEMORY 2 : PARIS OF DUSK', 
-            //     videoSrc: 'paris_video.mp4' 
-            // }
+            { 
+                lat: 25.1098, lng: 121.8452, // 대만 지우펀 위도/경도
+                name: 'JIUFEN', searchKeywords: ['지우펀', '대만', '타이완', 'TAIWAN', 'JIUFEN'],
+                desc: '홍등이 수놓은 밤골목의 아련한 향', 
+                memoryText: 'MEMORY 2 : TAIWAN JIUFEN', 
+                videoSrc: 'Jiufen_Perfume_Ad_Cinematic_Scene.mp4' 
+            }
         ];
 
         const world = Globe()
@@ -120,25 +142,49 @@
                 </div>
             `)
             .onPointClick(d => {
-                openModal(d); // 클릭하면 그 지역 데이터를 모달로 보냄
+                openModal(d); 
             });
 
         world.starPositions([...Array(2000)].map(() => [(Math.random()-0.5)*1000, (Math.random()-0.5)*1000, (Math.random()-0.5)*1000]));
-        world.pointOfView({ lat: 35, lng: 135, altitude: 2.2 });
+        world.pointOfView({ lat: 30, lng: 130, altitude: 2.2 }); // 초기 시점을 두 나라가 잘 보이게 조정
         world.controls().autoRotate = true;
         world.controls().autoRotateSpeed = 0.4; 
+
+        // 🔍 검색 기능 스크립트
+        function searchLocation() {
+            const query = document.getElementById('searchInput').value.trim().toUpperCase();
+            if (!query) return;
+
+            // 검색어(한글/영문/나라/도시)가 searchKeywords 배열에 포함되어 있는지 확인
+            const target = perfumeLocations.find(loc => 
+                loc.searchKeywords.some(keyword => keyword.toUpperCase().includes(query))
+            );
+
+            if (target) {
+                // 찾았으면 그 지역으로 카메라를 1.5초(1500ms) 동안 스무스하게 이동!
+                world.pointOfView({ lat: target.lat, lng: target.lng, altitude: 1.2 }, 1500);
+            } else {
+                alert('아직 조향되지 않은 지역이거나 검색어를 확인해주세요. 🌙');
+            }
+        }
+
+        // 엔터키 쳤을 때도 검색되게 하는 함수
+        function handleEnter(event) {
+            if (event.key === 'Enter') {
+                searchLocation();
+            }
+        }
 
         const modal = document.getElementById('videoModal');
         const video = document.getElementById('perfumeVideo');
         const source = document.getElementById('videoSource');
 
         function openModal(data) {
-            // 클릭한 지역에 맞게 창 제목, 설명, 영상을 알아서 바꿔치기 합니다
             document.getElementById('modalTitle').innerText = data.name;
             document.getElementById('modalDesc').innerText = data.memoryText;
             source.src = data.videoSrc;
             
-            video.load(); // 바뀐 영상 새로고침
+            video.load(); 
             modal.style.display = 'block';
             video.play();
         }
