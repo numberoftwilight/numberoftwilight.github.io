@@ -11,6 +11,7 @@
 
     <script src="https://unpkg.com/three"></script>
     <script src="https://unpkg.com/globe.gl"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
     
     <style>
         body {
@@ -28,12 +29,10 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* 왼쪽 상단 브랜드 로고 */
         .brand-header { position: absolute; top: 50px; left: 60px; z-index: 10; pointer-events: none; }
         .brand-header h1 { font-family: 'Playfair Display', serif; font-size: 28px; letter-spacing: 10px; font-weight: 400; margin: 0; color: #ebd5c1; }
         .brand-header p { font-size: 11px; letter-spacing: 5px; opacity: 0.4; margin-top: 12px; font-weight: 200; }
 
-        /* 🔍 우측 상단 검색창 디자인 */
         .search-container {
             position: absolute; top: 50px; right: 60px; z-index: 10;
             display: flex; gap: 10px; align-items: center;
@@ -75,6 +74,9 @@
 
         #perfumeVideo { width: 100%; outline: none; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .modal-title { font-family: 'Playfair Display', serif; font-style: italic; font-size: 34px; margin-bottom: 8px; color: #ebd5c1; letter-spacing: 2px; }
+        
+        /* 숨겨진 유튜브 플레이어 영역 */
+        #youtube-bgm-player { display: none; }
     </style>
 </head>
 <body>
@@ -97,28 +99,39 @@
         <p id="modalDesc" style="letter-spacing: 2px; font-weight: 200; font-size: 13px; color: #aaa; margin-bottom: 30px;">
             MEMORY DESC
         </p>
-        
         <video id="perfumeVideo" controls>
             <source id="videoSource" src="" type="video/mp4">
         </video>
     </div>
 
+    <div id="youtube-bgm-player"></div>
+
     <script>
-        // 🚨 여기에 가나자와와 지우펀 데이터가 모두 들어있습니다!
+        // 🎧 유튜브 BGM 플레이어 설정
+        let bgmPlayer;
+        function onYouTubeIframeAPIReady() {
+            bgmPlayer = new YT.Player('youtube-bgm-player', {
+                height: '0', width: '0',
+                playerVars: { 'autoplay': 0, 'controls': 0, 'rel': 0 },
+            });
+        }
+
         const perfumeLocations = [
             { 
                 lat: 36.5613, lng: 136.6562, 
                 name: 'KANAZAWA', searchKeywords: ['가나자와', '일본', 'JAPAN', 'KANAZAWA'],
                 desc: '바람을 타고 오는 은은한 향', 
                 memoryText: 'MEMORY 1 : KANAZAWA OF WIND', 
-                videoSrc: 'KakaoTalk_20260225_175616729.mp4' 
+                videoSrc: 'KakaoTalk_20260225_175616729.mp4',
+                bgmId: 'dFlDRhxR4EQ' // 일본 최신 유행곡 예시 (후지이 카제)
             },
             { 
-                lat: 25.1098, lng: 121.8452, // 대만 지우펀 위도/경도
+                lat: 25.1098, lng: 121.8452, 
                 name: 'JIUFEN', searchKeywords: ['지우펀', '대만', '타이완', 'TAIWAN', 'JIUFEN'],
                 desc: '홍등이 수놓은 밤골목의 아련한 향', 
                 memoryText: 'MEMORY 2 : TAIWAN JIUFEN', 
-                videoSrc: 'Jiufen_Perfume_Ad_Cinematic_Scene.mp4' 
+                videoSrc: 'Jiufen_Perfume_Ad_Cinematic_Scene.mp4',
+                bgmId: 'JBGhG0M11_8' // 대만 최신 유행곡 예시 (Eric Chou)
             }
         ];
 
@@ -146,29 +159,35 @@
             });
 
         world.starPositions([...Array(2000)].map(() => [(Math.random()-0.5)*1000, (Math.random()-0.5)*1000, (Math.random()-0.5)*1000]));
-        world.pointOfView({ lat: 30, lng: 130, altitude: 2.2 }); // 초기 시점을 두 나라가 잘 보이게 조정
+        world.pointOfView({ lat: 30, lng: 130, altitude: 2.2 }); 
         world.controls().autoRotate = true;
         world.controls().autoRotateSpeed = 0.4; 
 
-        // 🔍 검색 기능 스크립트
+        // 🔍 검색 & 배경음악 재생 기능
         function searchLocation() {
             const query = document.getElementById('searchInput').value.trim().toUpperCase();
             if (!query) return;
 
-            // 검색어(한글/영문/나라/도시)가 searchKeywords 배열에 포함되어 있는지 확인
             const target = perfumeLocations.find(loc => 
                 loc.searchKeywords.some(keyword => keyword.toUpperCase().includes(query))
             );
 
             if (target) {
-                // 찾았으면 그 지역으로 카메라를 1.5초(1500ms) 동안 스무스하게 이동!
+                // 1. 지구본 이동
                 world.pointOfView({ lat: target.lat, lng: target.lng, altitude: 1.2 }, 1500);
+                
+                // 2. 유튜브 BGM 자동 재생!
+                if (bgmPlayer && bgmPlayer.loadVideoById) {
+                    bgmPlayer.loadVideoById({
+                        'videoId': target.bgmId,
+                        'suggestedQuality': 'small' // 소리만 필요하므로 리소스 최소화
+                    });
+                }
             } else {
                 alert('아직 조향되지 않은 지역이거나 검색어를 확인해주세요. 🌙');
             }
         }
 
-        // 엔터키 쳤을 때도 검색되게 하는 함수
         function handleEnter(event) {
             if (event.key === 'Enter') {
                 searchLocation();
@@ -180,6 +199,11 @@
         const source = document.getElementById('videoSource');
 
         function openModal(data) {
+            // 🛑 모달창 띄울 때 배경음악이 겹치지 않게 일시정지!
+            if (bgmPlayer && typeof bgmPlayer.pauseVideo === 'function') {
+                bgmPlayer.pauseVideo();
+            }
+
             document.getElementById('modalTitle').innerText = data.name;
             document.getElementById('modalDesc').innerText = data.memoryText;
             source.src = data.videoSrc;
@@ -193,6 +217,11 @@
             modal.style.display = 'none';
             video.pause();
             video.currentTime = 0;
+            
+            // 🎵 모달창 닫으면 다시 잔잔하게 배경음악 재생
+            if (bgmPlayer && typeof bgmPlayer.playVideo === 'function') {
+                bgmPlayer.playVideo();
+            }
         }
     </script>
 </body>
