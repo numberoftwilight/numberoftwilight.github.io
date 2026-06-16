@@ -218,6 +218,7 @@ body{
 .card:hover{border-color:var(--champagne);transform:translateY(-5px);box-shadow:0 16px 44px rgba(0,0,0,.55)}
 .card .no{font-size:9px;letter-spacing:.4em;color:var(--ember)}
 .card .name{font-family:var(--font-serif);font-style:italic;font-size:19px;letter-spacing:.12em;color:var(--champagne)}
+.card .name.kr{font-family:var(--font-serif-kr);font-style:normal;font-weight:500;letter-spacing:.06em}
 .card .sub{font-size:11px;color:var(--mist);letter-spacing:.04em}
 .card.soon{opacity:.45;cursor:default}
 .card.soon:hover{transform:none;border-color:var(--line);box-shadow:none}
@@ -232,9 +233,9 @@ body{
 #detail.open{display:flex;animation:detailIn .7s cubic-bezier(.2,.8,.2,1)}
 @keyframes detailIn{from{opacity:0}to{opacity:1}}
 .detail-inner{
-  display:grid;grid-template-columns:1.25fr 1fr;width:100%;height:100%;
+  display:grid;grid-template-columns:auto 1fr;width:100%;height:100%;
   padding:clamp(24px,5vh,64px) clamp(24px,5vw,80px);gap:clamp(28px,4vw,70px);
-  overflow:hidden;
+  overflow:hidden;align-items:center;
 }
 .detail-close{
   position:absolute;top:30px;right:40px;z-index:5;
@@ -245,14 +246,17 @@ body{
 .detail-close:hover{border-color:var(--champagne);background:rgba(233,211,181,.08)}
 
 .d-media{display:flex;align-items:center;justify-content:center;min-width:0}
-.d-video-frame{
-  position:relative;width:100%;border-radius:18px;overflow:hidden;
-  border:1px solid var(--line);background:#000;
+.d-poster-frame{
+  position:relative;height:min(78vh,720px);aspect-ratio:1024/1536;max-width:100%;
+  border-radius:18px;overflow:hidden;
+  border:1px solid var(--line);background:#0a0810;
   box-shadow:0 40px 90px rgba(0,0,0,.7);
   animation:mediaIn .9s cubic-bezier(.2,.8,.2,1) .15s both;
 }
 @keyframes mediaIn{from{opacity:0;transform:translateY(34px) scale(.97)}to{opacity:1;transform:none}}
-.d-video-frame video{display:block;width:100%;aspect-ratio:16/9;object-fit:contain;outline:none;background:#000}
+.d-poster-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.d-poster-frame video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
+  background:#000;display:none;outline:none;z-index:4}
 .d-coords{
   position:absolute;left:18px;top:16px;z-index:3;
   font-size:9px;letter-spacing:.32em;color:rgba(233,211,181,.85);
@@ -260,9 +264,31 @@ body{
   padding:7px 13px;border-radius:30px;backdrop-filter:blur(6px);pointer-events:none;
 }
 
-/* 영상 준비중 플레이스홀더 */
+/* 재생 버튼 오버레이 (포스터 위) */
+.d-play{
+  position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:18px;cursor:pointer;
+  background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.35));
+  border:none;transition:background .4s;
+}
+.d-play:hover{background:linear-gradient(180deg,rgba(0,0,0,.0),rgba(0,0,0,.22))}
+.d-play-ring{
+  width:78px;height:78px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(233,211,181,.7);background:rgba(7,6,12,.4);backdrop-filter:blur(6px);
+  transition:.35s;position:relative;
+}
+.d-play-ring::after{content:"";position:absolute;inset:-8px;border-radius:50%;
+  border:1px solid rgba(233,211,181,.3);animation:markerPulse 2.6s ease-out infinite}
+.d-play:hover .d-play-ring{transform:scale(1.08);border-color:var(--champagne);
+  box-shadow:0 0 36px rgba(233,211,181,.35)}
+.d-play-tri{width:0;height:0;border-style:solid;border-width:11px 0 11px 18px;
+  border-color:transparent transparent transparent var(--champagne);margin-left:5px}
+.d-play-label{font-family:var(--font-body);font-size:10px;letter-spacing:.5em;text-indent:.5em;
+  color:var(--champagne);text-shadow:0 2px 12px rgba(0,0,0,.6)}
+
+/* 영상 준비중 플레이스홀더 (포스터 없을 때만 노출) */
 .d-video-soon{
-  width:100%;aspect-ratio:16/9;display:none;flex-direction:column;
+  position:absolute;inset:0;z-index:3;display:none;flex-direction:column;
   align-items:center;justify-content:center;gap:14px;
   background:
     radial-gradient(60% 60% at 50% 40%, rgba(96,52,90,.22), transparent 70%),
@@ -336,10 +362,11 @@ body{
   .card{min-width:160px;flex:0 0 auto;padding:13px 17px}
   .marker-country .tag{font-size:11px;letter-spacing:.18em;padding:7px 13px}
   .marker-country .tag i{display:none}
-  .detail-inner{grid-template-columns:1fr;overflow-y:auto;gap:26px;
-    padding:80px 22px 50px;align-content:start}
-  .d-info{overflow:visible;justify-content:flex-start}
-  .detail-close{top:20px;right:20px}
+  .detail-inner{grid-template-columns:1fr;overflow-y:auto;gap:24px;
+    padding:70px 18px 50px;align-content:start;justify-items:center}
+  .d-poster-frame{height:auto;width:min(86vw,360px);max-width:360px}
+  .d-info{overflow:visible;justify-content:flex-start;width:100%}
+  .detail-close{top:18px;right:18px}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
@@ -405,9 +432,14 @@ body{
   <button class="detail-close" onclick="closeDetail()">CLOSE ✕</button>
   <div class="detail-inner">
     <div class="d-media">
-      <div class="d-video-frame">
+      <div class="d-poster-frame" id="dPosterFrame">
         <span class="d-coords" id="dCoords"></span>
-        <video id="dVideo" controls playsinline></video>
+        <img id="dPoster" alt="" />
+        <button class="d-play" id="dPlay" onclick="playFilm()" aria-label="향수 필름 재생">
+          <span class="d-play-ring"><span class="d-play-tri"></span></span>
+          <span class="d-play-label">SCENT FILM</span>
+        </button>
+        <video id="dVideo" controls playsinline preload="none"></video>
         <div class="d-video-soon" id="dVideoSoon">
           <span class="soon-mark">✦</span>
           <span class="soon-t">SCENT FILM</span>
@@ -527,7 +559,8 @@ const perfumes = [
     keywords:['가나자와','일본','japan','kanazawa','jp'],
     tagline:'바람을 타고 오는 은은한 향',
     story:'비가 갓 지나간 겐로쿠엔의 아침. 이끼 위에 맺힌 물방울과 차실에서 새어 나오는 화이트 티의 온기가 바람에 실려 옵니다. 가나자와의 고요한 골목을 걷던 그날의 공기를, 한 병에 담았습니다.',
-    video:'KakaoTalk_20260225_175616729.mp4',
+    poster:'kanazawa.png',
+    video:'kanazawa.mp4',
     bgm:'dFlDRhxR4EQ',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -537,29 +570,14 @@ const perfumes = [
     ]
   },
   {
-    id:'fukuoka',
-    lat:33.5904, lng:130.3210,
-    name:'FUKUOKA', country:'JAPAN', no:'MEMORY 05',
-    keywords:['후쿠오카','일본','japan','fukuoka','momochi','모모치','jp'],
-    tagline:'모모치 해변, 비눗방울이 흩날리던 결혼식',
-    story:'모모치 해변의 새하얀 교회. 식이 끝나고 문이 열리면 바다 바람을 타고 수천 개의 비눗방울이 햇살에 부서집니다. 면사포처럼 투명한 그 순간, 가장 깨끗하고 영롱한 공기를 향으로 옮겼습니다.',
-    video:'',
-    bgm:'dFlDRhxR4EQ',
-    price:'₩128,000', size:'EAU DE PARFUM · 50ml',
-    notes:[
-      {k:'TOP', v:'알데하이드, 페어 블라썸, 화이트 프리지아', w:.95},
-      {k:'MIDDLE', v:'화이트 로즈, 은방울꽃, 코튼 플라워', w:.72},
-      {k:'BASE', v:'화이트 머스크, 블론드 우드, 스웨이드', w:.48},
-    ]
-  },
-  {
     id:'jiufen',
     lat:25.1098, lng:121.8452,
     name:'JIUFEN', country:'TAIWAN', no:'MEMORY 02',
     keywords:['지우펀','대만','타이완','taiwan','jiufen','tw'],
     tagline:'홍등이 수놓은 밤골목의 아련한 향',
     story:'해가 지면 지우펀의 계단길에는 수백 개의 홍등이 켜집니다. 찻집에서 우려낸 우롱차의 깊은 향과 골목 끝에서 피어오르는 인센스의 연기. 안개 낀 산마을의 밤을 그대로 옮겨 담은 향입니다.',
-    video:'Jiufen_Perfume_Ad_Cinematic_Scene.mp4',
+    poster:'jiufen.png',
+    video:'jiufen.mp4',
     bgm:'JBGhG0M11_8',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -569,13 +587,31 @@ const perfumes = [
     ]
   },
   {
+    id:'banff',
+    lat:51.4968, lng:-115.9281,
+    name:'BANFF', country:'CANADA', no:'MEMORY 03',
+    keywords:['밴프','반프','캐나다','canada','banff','루이스','lake louise'],
+    tagline:'호수 위로 단풍이 내려앉던 가을',
+    story:'에메랄드빛 루이스 호수 위로 붉은 단풍이 흩날립니다. 차가운 산 공기에 섞인 젖은 낙엽과 솔잎의 향, 그리고 멀리 빙하에서 불어오는 청명한 바람. 밴프의 깊고 투명한 가을을 한 병에 담았습니다.',
+    poster:'banff.png',
+    video:'banff.mp4',
+    bgm:'dFlDRhxR4EQ',
+    price:'₩128,000', size:'EAU DE PARFUM · 50ml',
+    notes:[
+      {k:'TOP', v:'단풍잎, 차가운 산 공기, 베르가못', w:.9},
+      {k:'MIDDLE', v:'젖은 낙엽, 시더우드, 파인 니들', w:.74},
+      {k:'BASE', v:'베티버, 머스크, 따뜻한 앰버', w:.52},
+    ]
+  },
+  {
     id:'phuquoc',
     lat:10.2899, lng:103.9840,
     name:'PHÚ QUỐC', country:'VIETNAM', no:'MEMORY 04',
     keywords:['푸꾸옥','베트남','vietnam','phuquoc','phu quoc','vn'],
-    tagline:'키스 오브 더 씨쇼, 여름밤의 몽환',
-    story:'해가 진 푸꾸옥의 밤바다. 짠 내음이 밴 따뜻한 바람과 어둠 속에서 흔들리는 흰 꽃의 향기. 키스 오브 더 씨쇼를 바라보던 그 여름밤의 몽환적인 공기를, 한 병에 가두었습니다.',
-    video:'',
+    tagline:'밤바다 위로 터지던 불꽃의 여름',
+    story:'해가 진 푸꾸옥의 밤바다. 파도 끝에 반짝이는 푸른 야광과 하늘 위로 터지는 황금빛 불꽃. 짠 내음 밴 따뜻한 바람과 흰 꽃 향기 속, 키스 오브 더 씨쇼를 바라보던 그 여름밤의 몽환을 한 병에 가두었습니다.',
+    poster:'phuquoc.png',
+    video:'phuquoc.mp4',
     bgm:'JBGhG0M11_8',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -583,15 +619,51 @@ const perfumes = [
       {k:'MIDDLE', v:'야간 튜베로즈, 워터 자스민, 라임 블라썸', w:.78},
       {k:'BASE', v:'코코넛 우드, 화이트 머스크, 앰버', w:.5},
     ]
+  },
+  {
+    id:'fukuoka',
+    lat:33.5904, lng:130.3210,
+    name:'FUKUOKA', country:'JAPAN', no:'MEMORY 05',
+    keywords:['후쿠오카','일본','japan','fukuoka','momochi','모모치','jp'],
+    tagline:'모모치 해변, 비눗방울이 흩날리던 결혼식',
+    story:'모모치 해변의 새하얀 교회. 식이 끝나고 문이 열리면 바다 바람을 타고 수천 개의 비눗방울이 햇살에 부서집니다. 면사포처럼 투명한 그 순간, 가장 깨끗하고 영롱한 공기를 향으로 옮겼습니다.',
+    poster:'fukuoka.png',
+    video:'fukuoka.mp4',
+    bgm:'dFlDRhxR4EQ',
+    price:'₩128,000', size:'EAU DE PARFUM · 50ml',
+    notes:[
+      {k:'TOP', v:'알데하이드, 페어 블라썸, 화이트 프리지아', w:.95},
+      {k:'MIDDLE', v:'화이트 로즈, 은방울꽃, 코튼 플라워', w:.72},
+      {k:'BASE', v:'화이트 머스크, 블론드 우드, 스웨이드', w:.48},
+    ]
+  },
+  {
+    id:'xiamen',
+    lat:24.4798, lng:118.0894,
+    name:'XIAMEN', country:'CHINA', no:'MEMORY 06',
+    keywords:['샤먼','하문','중국','china','xiamen','구랑위','gulangyu'],
+    tagline:'등불이 강을 따라 흐르던 밤',
+    story:'샤먼의 해변, 수천 개의 등불이 물 위로 떠오릅니다. 따뜻한 바닷바람에 실린 흰 꽃 향기와 멀리 구랑위 섬에서 들려오는 피아노 소리. 등불이 강을 따라 흐르던 그 고요한 밤을, 한 병에 담았습니다.',
+    poster:'xiamen.png',
+    video:'xiamen.mp4',
+    bgm:'JBGhG0M11_8',
+    price:'₩128,000', size:'EAU DE PARFUM · 50ml',
+    notes:[
+      {k:'TOP', v:'네롤리, 만다린, 따뜻한 바닷바람', w:.9},
+      {k:'MIDDLE', v:'백목련, 오스만투스, 자스민', w:.76},
+      {k:'BASE', v:'화이트 앰버, 샌달우드, 머스크', w:.5},
+    ]
   }
 ];
 
 /* 국가 정의 — 지구본 1단계(국가 마커)에서 사용.
    새 나라를 추가할 땐 여기에 한 줄, 그리고 위 perfumes에 country를 맞춰 넣으면 됩니다. */
 const countries = [
-  {id:'JAPAN',   label:'JAPAN',   ko:'일본',   flag:'🇯🇵', lat:36.5, lng:138.0, zoom:1.15},
-  {id:'TAIWAN',  label:'TAIWAN',  ko:'대만',   flag:'🇹🇼', lat:23.7, lng:121.0, zoom:0.9},
-  {id:'VIETNAM', label:'VIETNAM', ko:'베트남', flag:'🇻🇳', lat:14.0, lng:108.3, zoom:1.35},
+  {id:'JAPAN',   label:'JAPAN',   ko:'일본',   flag:'🇯🇵', lat:36.5,  lng:138.0,  zoom:1.15},
+  {id:'TAIWAN',  label:'TAIWAN',  ko:'대만',   flag:'🇹🇼', lat:23.7,  lng:121.0,  zoom:0.9},
+  {id:'CANADA',  label:'CANADA',  ko:'캐나다', flag:'🇨🇦', lat:51.5,  lng:-115.9, zoom:1.5},
+  {id:'VIETNAM', label:'VIETNAM', ko:'베트남', flag:'🇻🇳', lat:14.0,  lng:108.3,  zoom:1.35},
+  {id:'CHINA',   label:'CHINA',   ko:'중국',   flag:'🇨🇳', lat:24.5,  lng:118.1,  zoom:1.2},
 ];
 function citiesOf(countryId){ return perfumes.filter(p => p.country === countryId); }
 
@@ -837,25 +909,61 @@ function openDetail(p){
   if (bgmPlayer && typeof bgmPlayer.pauseVideo === 'function') bgmPlayer.pauseVideo();
 
   const soon = document.getElementById('dVideoSoon');
-  if (p.video){                              // 영상 파일이 있으면 재생
-    soon.style.display = 'none';
-    dVideo.style.display = 'block';
-    dVideo.src = p.video;
-    detail.classList.add('open');
-    dVideo.play().catch(()=>{});
-  } else {                                   // 없으면 "영상 준비중" 플레이스홀더
-    dVideo.removeAttribute('src'); dVideo.load();
-    dVideo.style.display = 'none';
-    soon.style.display = 'flex';
-    detail.classList.add('open');
+  const poster = document.getElementById('dPoster');
+  const playBtn = document.getElementById('dPlay');
+
+  // 영상 초기화 (이전 향수 영상이 남지 않게)
+  dVideo.pause(); dVideo.removeAttribute('src'); dVideo.load();
+  dVideo.style.display = 'none';
+
+  // 포스터를 메인으로
+  if (p.poster){
+    poster.src = p.poster;
+    poster.style.display = 'block';
+  } else {
+    poster.removeAttribute('src');
+    poster.style.display = 'none';
   }
+
+  // 영상 유무에 따라 재생버튼 / 준비중 표시
+  if (p.video){
+    playBtn.style.display = 'flex';
+    soon.style.display = 'none';
+  } else {
+    playBtn.style.display = 'none';
+    soon.style.display = p.poster ? 'none' : 'flex';  // 포스터도 영상도 없을 때만 준비중
+  }
+
+  detail.classList.add('open');
   currentPerfume = p;
 }
 let currentPerfume = null;
 
+/* 포스터 위 재생버튼 → 세로 영상 재생 */
+function playFilm(){
+  const p = currentPerfume; if (!p || !p.video) return;
+  const poster = document.getElementById('dPoster');
+  const playBtn = document.getElementById('dPlay');
+  if (bgmPlayer && typeof bgmPlayer.pauseVideo === 'function') bgmPlayer.pauseVideo();
+  dVideo.src = p.video;
+  dVideo.style.display = 'block';
+  poster.style.display = 'none';
+  playBtn.style.display = 'none';
+  dVideo.play().catch(()=>{});
+  // 영상이 끝나면 다시 포스터로 복귀
+  dVideo.onended = ()=>{
+    dVideo.style.display = 'none';
+    poster.style.display = p.poster ? 'block' : 'none';
+    playBtn.style.display = 'flex';
+  };
+}
+
 function closeDetail(){
   detail.classList.remove('open');
-  dVideo.pause(); dVideo.removeAttribute('src'); dVideo.load();
+  dVideo.pause(); dVideo.removeAttribute('src'); dVideo.load(); dVideo.onended = null;
+  dVideo.style.display = 'none';
+  const playBtn = document.getElementById('dPlay');
+  if (playBtn) playBtn.style.display = 'none';
   if (soonEl()) soonEl().style.display = 'none';
   if (soundOn && bgmPlayer && typeof bgmPlayer.playVideo === 'function') bgmPlayer.playVideo();
   // 도시 상세에서 나오면 그 국가 화면을 유지(자동회전은 전체보기에서만)
@@ -895,7 +1003,7 @@ function renderCards(){
         const n = citiesOf(c.id).length;
         return `<button class="card" onclick="enterCountry(countries.find(x=>x.id==='${c.id}'))">
           <span class="no">${c.flag} ${c.label}</span>
-          <span class="name">${c.ko}</span>
+          <span class="name kr">${c.ko}</span>
           <span class="sub">${n}개의 향 컬렉션</span>
         </button>`;
       }).join('')
