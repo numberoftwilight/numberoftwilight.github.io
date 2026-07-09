@@ -173,6 +173,8 @@ body{
   white-space:nowrap;transition:border-color .3s, box-shadow .3s;
 }
 .marker:hover .tag{border-color:var(--champagne);box-shadow:0 0 26px rgba(233,211,181,.22)}
+/* 이웃 마커와 겹치는 지역: 앵커 아래쪽으로 뒤집어 배치 */
+.marker.stack{transform:translate(-50%,8px)}
 
 /* 국가 마커 (1단계) — 도시보다 크고 진하게 */
 .marker-country .ring{width:17px;height:17px;background:rgba(233,211,181,.24)}
@@ -181,7 +183,11 @@ body{
   font-size:13px;letter-spacing:.26em;text-indent:.26em;padding:9px 18px;
   display:flex;align-items:center;gap:9px;
 }
-.marker-country .tag b{font-size:15px;font-weight:400}
+.flag{width:20px;height:15px;object-fit:cover;border-radius:2.5px;vertical-align:-3px;
+  box-shadow:0 0 0 1px rgba(233,211,181,.18);flex:none}
+.card .no .flag{width:16px;height:12px;vertical-align:-2px}
+.col-eyebrow .flag{width:15px;height:11px;vertical-align:-2px;margin-right:2px}
+.bc-now .flag{width:17px;height:13px;vertical-align:-2px}
 .marker-country .tag i{
   font-style:normal;font-size:9px;letter-spacing:.18em;color:var(--mist);
   border-left:1px solid var(--line);padding-left:9px;margin-left:2px;
@@ -206,9 +212,17 @@ body{
   padding:0 44px 30px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;
   pointer-events:none;
 }
-.col-left{pointer-events:auto}
+.col-left{pointer-events:auto;flex:1;min-width:0}
 .col-eyebrow{font-size:10px;letter-spacing:.44em;color:var(--mist);margin-bottom:14px}
-.cards{display:flex;gap:14px;flex-wrap:wrap}
+.cards{
+  display:flex;gap:14px;flex-wrap:nowrap;
+  overflow-x:auto;padding-bottom:8px;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  -webkit-mask-image:linear-gradient(90deg,#000 92%,transparent);
+  mask-image:linear-gradient(90deg,#000 92%,transparent);
+}
+.cards::-webkit-scrollbar{display:none}
+.cards > *{flex:0 0 auto}
 .card{
   display:flex;flex-direction:column;gap:5px;text-align:left;
   background:rgba(7,6,12,.5);border:1px solid var(--line);border-radius:18px;
@@ -258,7 +272,7 @@ body{
 .d-poster-frame video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
   background:#000;display:none;outline:none;z-index:4}
 .d-coords{
-  position:absolute;left:18px;top:16px;z-index:3;
+  position:absolute;left:18px;top:16px;z-index:5;
   font-size:9px;letter-spacing:.32em;color:rgba(233,211,181,.85);
   background:rgba(7,6,12,.55);border:1px solid var(--line);
   padding:7px 13px;border-radius:30px;backdrop-filter:blur(6px);pointer-events:none;
@@ -312,6 +326,8 @@ body{
 .d-info > *:nth-child(4){animation-delay:.49s}
 .d-info > *:nth-child(5){animation-delay:.57s}
 .d-info > *:nth-child(6){animation-delay:.65s}
+.d-info > *:nth-child(7){animation-delay:.73s}
+.d-info > *:nth-child(8){animation-delay:.81s}
 
 .d-eyebrow{font-size:10px;letter-spacing:.46em;color:var(--ember);margin-bottom:16px}
 .d-title{font-family:var(--font-display);font-size:clamp(38px,4.6vw,62px);letter-spacing:.14em;color:var(--champagne);line-height:1.05;font-weight:400}
@@ -329,6 +345,29 @@ body{
   transform-origin:left;transform:scaleX(0);transition:transform 1.2s cubic-bezier(.2,.8,.2,1) .6s}
 #detail.open .note-bar{transform:scaleX(var(--w))}
 
+/* 향 성격 그래프 (SCENT PROFILE) */
+.sec-eyebrow{font-size:9.5px;letter-spacing:.4em;color:var(--ember);margin:26px 0 14px}
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px 26px}
+.p-row{display:flex;flex-direction:column;gap:7px}
+.p-head{display:flex;justify-content:space-between;align-items:baseline}
+.p-k{font-size:9px;letter-spacing:.28em;color:var(--champagne)}
+.p-ko{font-size:10px;color:var(--mist);letter-spacing:.06em}
+.p-track{height:2px;background:rgba(233,211,181,.12);border-radius:2px;overflow:hidden}
+.p-fill{height:100%;background:linear-gradient(90deg,var(--ember),var(--champagne));
+  transform-origin:left;transform:scaleX(0);transition:transform 1.1s cubic-bezier(.2,.8,.2,1) .75s;border-radius:2px}
+#detail.open .p-fill{transform:scaleX(var(--w))}
+
+/* 추천 상황 (MOMENTS) + 메타 */
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{
+  font-size:11.5px;letter-spacing:.04em;color:#ddd6e4;
+  border:1px solid var(--line);border-radius:30px;padding:8px 15px;
+  background:rgba(233,211,181,.04);font-family:var(--font-serif-kr);font-weight:300;
+}
+.d-meta{margin-top:14px;font-size:10px;letter-spacing:.22em;color:var(--mist)}
+.d-meta b{color:rgba(233,211,181,.9);font-weight:500;letter-spacing:.14em}
+.d-meta .sep{margin:0 10px;opacity:.4}
+
 /* 가격 / CTA */
 .d-buy{margin-top:34px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
 .price{font-family:var(--font-serif);font-size:24px;color:var(--champagne);letter-spacing:.04em}
@@ -339,6 +378,71 @@ body{
   letter-spacing:.34em;text-indent:.34em;cursor:pointer;transition:.35s;
 }
 .btn-buy:hover{background:#f6e6cd;box-shadow:0 10px 36px rgba(233,211,181,.3);transform:translateY(-2px)}
+
+/* ── SCENT FINDER ─────────────────────── */
+.finder-btn{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(7,6,12,.5);border:1px solid var(--line);border-radius:40px;
+  color:var(--champagne);font-family:var(--font-body);font-size:11px;
+  letter-spacing:.3em;text-indent:.1em;padding:12px 20px;cursor:pointer;
+  backdrop-filter:blur(12px);transition:.35s;white-space:nowrap;
+}
+.finder-btn:hover{border-color:var(--champagne);box-shadow:0 0 28px rgba(233,211,181,.18)}
+
+#quiz{
+  position:fixed;inset:0;z-index:55;display:none;align-items:center;justify-content:center;
+  background:rgba(6,5,10,.93);backdrop-filter:blur(12px);
+}
+#quiz.open{display:flex;animation:detailIn .5s cubic-bezier(.2,.8,.2,1)}
+.quiz-inner{
+  width:min(600px,92vw);max-height:88vh;overflow-y:auto;scrollbar-width:none;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:20px;
+}
+.quiz-inner::-webkit-scrollbar{display:none}
+.q-eyebrow{font-size:10px;letter-spacing:.5em;text-indent:.5em;color:var(--ember);margin-bottom:26px}
+.q-title{font-family:var(--font-serif-kr);font-weight:400;font-size:clamp(21px,3vw,28px);
+  color:var(--champagne);letter-spacing:.06em;margin-bottom:34px;line-height:1.5}
+.q-opts{display:flex;flex-direction:column;gap:12px;width:100%;max-width:440px}
+@media (min-width:760px){
+  .q-opts{display:grid;grid-template-columns:1fr 1fr;max-width:640px;gap:11px}
+}
+.q-opt{
+  display:flex;align-items:center;gap:16px;text-align:left;
+  background:rgba(233,211,181,.03);border:1px solid var(--line);border-radius:16px;
+  padding:16px 22px;cursor:pointer;transition:.3s;font-family:var(--font-body);color:#eee;
+}
+.q-opt:hover{border-color:var(--champagne);background:rgba(233,211,181,.07);transform:translateY(-2px)}
+.q-opt .qe{font-size:21px;flex:none}
+.q-opt .qt{font-size:14.5px;letter-spacing:.02em;font-weight:500}
+.q-opt .qs{font-size:11.5px;color:var(--mist);margin-top:3px}
+.q-dots{display:flex;gap:9px;margin-top:34px}
+.q-dots i{width:6px;height:6px;border-radius:50%;background:rgba(233,211,181,.2);transition:.3s}
+.q-dots i.on{background:var(--champagne);box-shadow:0 0 10px rgba(233,211,181,.5)}
+
+/* 퀴즈 결과 */
+.q-result{display:flex;flex-direction:column;align-items:center;animation:fadeUp .6s ease}
+.q-r-eyebrow{font-size:10px;letter-spacing:.44em;text-indent:.44em;color:var(--mist);margin-bottom:20px}
+.q-poster{
+  height:min(38vh,320px);aspect-ratio:1024/1536;border-radius:14px;overflow:hidden;
+  border:1px solid var(--line);box-shadow:0 26px 60px rgba(0,0,0,.65);margin-bottom:24px;
+}
+.q-poster img{width:100%;height:100%;object-fit:cover;display:block}
+.q-nop{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+  background:radial-gradient(60% 55% at 50% 42%, rgba(96,52,90,.22), transparent 70%), linear-gradient(160deg,#100a18,#080610)}
+.q-nop span{font-size:26px;color:var(--champagne);opacity:.8;animation:soonPulse 3s ease-in-out infinite}
+.q-nop em{font-style:normal;font-size:8.5px;letter-spacing:.4em;text-indent:.4em;color:var(--mist);text-align:center;line-height:2}
+.q-r-name{font-family:var(--font-display);font-size:clamp(30px,4vw,42px);letter-spacing:.16em;
+  color:var(--champagne);font-weight:400}
+.q-r-tag{font-family:var(--font-serif-kr);font-weight:300;font-size:14px;color:var(--mist);
+  margin:10px 0 28px;letter-spacing:.1em}
+.q-r-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btn-ghost{
+  background:none;border:1px solid var(--line);color:var(--champagne);border-radius:40px;
+  padding:15px 30px;font-family:var(--font-body);font-size:11px;letter-spacing:.3em;
+  text-indent:.3em;cursor:pointer;transition:.3s;
+}
+.btn-ghost:hover{border-color:var(--champagne);background:rgba(233,211,181,.07)}
 
 /* 토스트 */
 .toast{
@@ -353,7 +457,10 @@ body{
 @media (max-width:920px){
   .hud-top{padding:22px 20px;flex-wrap:wrap;gap:14px}
   .brand h1{font-size:16px;letter-spacing:.3em}
-  .search-box{min-width:0;width:min(62vw,250px)}
+  .search-box{min-width:0;width:min(52vw,220px)}
+  .finder-btn{padding:11px 14px;letter-spacing:.1em}
+  .finder-btn .fb-t{display:none}
+  .profile-grid{grid-template-columns:1fr;gap:12px}
   .collection{padding:0 16px 18px}
   .hint{display:none}
   .breadcrumb{left:16px;top:auto;bottom:150px}
@@ -397,6 +504,7 @@ body{
       <p>SCENT OF THE WORLD GAZE</p>
     </div>
     <div class="hud-right">
+      <button class="finder-btn" onclick="openQuiz()">✦ <span class="fb-t">SCENT FINDER</span></button>
       <button class="sound-toggle" id="soundToggle" onclick="toggleSound()" aria-label="배경 음악 켜기/끄기">
         <i></i><i></i><i></i>
       </button>
@@ -424,6 +532,16 @@ body{
     <div class="hint">
       DRAG TO EXPLORE<br>CLICK A COUNTRY TO ENTER
     </div>
+  </div>
+</div>
+
+<!-- ────── SCENT FINDER 퀴즈 ────── -->
+<div id="quiz" role="dialog" aria-modal="true">
+  <button class="detail-close" onclick="closeQuiz()">CLOSE ✕</button>
+  <div class="quiz-inner">
+    <p class="q-eyebrow">SCENT FINDER</p>
+    <div id="quizBody"></div>
+    <div class="q-dots" id="qDots"></div>
   </div>
 </div>
 
@@ -455,6 +573,15 @@ body{
       </div>
       <p class="d-story" id="dStory"></p>
       <div class="pyramid" id="dPyramid"></div>
+      <div class="profile-sec" id="dProfileSec">
+        <p class="sec-eyebrow">SCENT PROFILE</p>
+        <div class="profile-grid" id="dProfile"></div>
+      </div>
+      <div class="moments-sec" id="dMomentsSec">
+        <p class="sec-eyebrow">MOMENTS · 이럴 때</p>
+        <div class="pills" id="dMoments"></div>
+        <p class="d-meta" id="dMeta"></p>
+      </div>
       <div class="d-buy">
         <span class="price" id="dPrice"></span>
         <button class="btn-buy" onclick="addToCart()">구매하기</button>
@@ -567,7 +694,10 @@ const perfumes = [
       {k:'TOP', v:'비에 젖은 이끼, 베르가못', w:.95},
       {k:'MIDDLE', v:'은은한 매화, 화이트 티', w:.7},
       {k:'BASE', v:'샌달우드, 흙내음', w:.45},
-    ]
+    ],
+    profile:{fresh:.85, floral:.55, woody:.5, sweet:.2},
+    moments:['비 갠 아침의 정원 산책','고요한 찻집에서','차분한 데일리 향으로'],
+    meta:{longevity:'5–7시간', season:'봄 · 가을', time:'낮'}
   },
   {
     id:'jiufen',
@@ -584,7 +714,10 @@ const perfumes = [
       {k:'TOP', v:'스파이시 페퍼, 만다린', w:.9},
       {k:'MIDDLE', v:'오리엔탈 인센스, 우롱차', w:.75},
       {k:'BASE', v:'다크 머스크, 패출리', w:.5},
-    ]
+    ],
+    profile:{fresh:.25, floral:.3, woody:.8, sweet:.45},
+    moments:['깊어가는 가을밤','분위기 있는 저녁 자리','혼자만의 티타임'],
+    meta:{longevity:'7–9시간', season:'가을 · 겨울', time:'밤'}
   },
   {
     id:'banff',
@@ -601,7 +734,10 @@ const perfumes = [
       {k:'TOP', v:'단풍잎, 차가운 산 공기, 베르가못', w:.9},
       {k:'MIDDLE', v:'젖은 낙엽, 시더우드, 파인 니들', w:.74},
       {k:'BASE', v:'베티버, 머스크, 따뜻한 앰버', w:.52},
-    ]
+    ],
+    profile:{fresh:.6, floral:.15, woody:.9, sweet:.3},
+    moments:['늦가을 여행길','트렌치코트 위에 한 번','맑고 차가운 아침 공기 속'],
+    meta:{longevity:'6–8시간', season:'가을 · 겨울', time:'낮 · 밤'}
   },
   {
     id:'phuquoc',
@@ -618,7 +754,10 @@ const perfumes = [
       {k:'TOP', v:'솔티 씨 미스트, 베르가못, 그린 만다린', w:.92},
       {k:'MIDDLE', v:'야간 튜베로즈, 워터 자스민, 라임 블라썸', w:.78},
       {k:'BASE', v:'코코넛 우드, 화이트 머스크, 앰버', w:.5},
-    ]
+    ],
+    profile:{fresh:.7, floral:.75, woody:.3, sweet:.55},
+    moments:['한여름 밤의 해변','설레는 여름 데이트','휴양지의 마지막 저녁'],
+    meta:{longevity:'6–8시간', season:'여름', time:'밤'}
   },
   {
     id:'fukuoka',
@@ -635,7 +774,10 @@ const perfumes = [
       {k:'TOP', v:'알데하이드, 페어 블라썸, 화이트 프리지아', w:.95},
       {k:'MIDDLE', v:'화이트 로즈, 은방울꽃, 코튼 플라워', w:.72},
       {k:'BASE', v:'화이트 머스크, 블론드 우드, 스웨이드', w:.48},
-    ]
+    ],
+    profile:{fresh:.8, floral:.85, woody:.15, sweet:.4},
+    moments:['햇살 좋은 주말 오후','특별한 날의 첫인상','깨끗한 리넨 셔츠 위에'],
+    meta:{longevity:'4–6시간', season:'봄 · 여름', time:'낮'}
   },
   {
     id:'xiamen',
@@ -652,18 +794,354 @@ const perfumes = [
       {k:'TOP', v:'네롤리, 만다린, 따뜻한 바닷바람', w:.9},
       {k:'MIDDLE', v:'백목련, 오스만투스, 자스민', w:.76},
       {k:'BASE', v:'화이트 앰버, 샌달우드, 머스크', w:.5},
-    ]
+    ],
+    profile:{fresh:.65, floral:.8, woody:.4, sweet:.5},
+    moments:['노을 지는 바닷가 산책','따뜻한 저녁 모임','여행의 마지막 밤'],
+    meta:{longevity:'5–7시간', season:'늦여름 · 초가을', time:'저녁'}
+  },
+  {
+    id:'kyoto',
+    lat:35.0116, lng:135.7681,
+    name:'KYOTO', country:'JAPAN', no:'MEMORY 07',
+    keywords:['교토','일본','japan','kyoto','아라시야마','arashiyama','jp'],
+    tagline:'대나무 숲을 지나는 초록의 바람',
+    story:'이른 아침의 아라시야마 대숲. 하늘까지 뻗은 대나무 사이로 바람이 지나가면, 수만 장의 댓잎이 서로 스치며 소리를 냅니다. 이끼 낀 돌길과 찻집의 말차 향, 그 서늘하고 푸른 공기를 한 병에 담았습니다.',
+    poster:'', /* kyoto.png 업로드 후 파일명 입력 */
+    video:'',  /* kyoto.mp4 업로드 후 파일명 입력 */
+    bgm:'dFlDRhxR4EQ',
+    price:'₩128,000', size:'EAU DE PARFUM · 50ml',
+    notes:[
+      {k:'TOP', v:'그린 뱀부, 유자, 이슬 맺힌 잎', w:.95},
+      {k:'MIDDLE', v:'말차, 바이올렛 리프', w:.68},
+      {k:'BASE', v:'히노키, 화이트 머스크', w:.45},
+    ],
+    profile:{fresh:.9, floral:.3, woody:.65, sweet:.15},
+    moments:['이른 아침의 산책','명상하듯 고요한 시간','그린 계열을 좋아한다면'],
+    meta:{longevity:'4–6시간', season:'봄 · 여름', time:'낮'}
+  },
+  {
+    id:'hoian',
+    lat:15.8801, lng:108.3380,
+    name:'HỘI AN', country:'VIETNAM', no:'MEMORY 08',
+    keywords:['호이안','베트남','vietnam','hoian','hoi an','올드타운','vn'],
+    tagline:'노란 골목에 흐드러진 부겐빌레아',
+    story:'해질녘의 호이안 올드타운. 노란 벽을 타고 오른 진분홍 부겐빌레아가 저녁 빛에 물들고, 골목 끝에서는 잘 익은 열대 과일의 달큰한 향이 흘러나옵니다. 그 노랗고 분홍했던 저녁을, 한 병에 담았습니다.',
+    poster:'', video:'',
+    bgm:'JBGhG0M11_8',
+    price:'₩128,000', size:'EAU DE PARFUM · 50ml',
+    notes:[
+      {k:'TOP', v:'만다린, 패션프루트', w:.9},
+      {k:'MIDDLE', v:'부겐빌레아, 프란지파니', w:.8},
+      {k:'BASE', v:'통카빈, 샌달우드', w:.5},
+    ],
+    profile:{fresh:.6, floral:.8, woody:.25, sweet:.65},
+    moments:['노을 지는 골목 산책','달콤한 휴양의 오후','사진이 잘 나오는 날'],
+    meta:{longevity:'5–7시간', season:'여름 · 초가을', time:'저녁'}
+  },
+  {
+    id:'hanoi',
+    lat:21.0285, lng:105.8542,
+    name:'HANOI', country:'VIETNAM', no:'MEMORY 09',
+    keywords:['하노이','베트남','vietnam','hanoi','호안끼엠','vn'],
+    tagline:'안개 낀 호수, 연꽃과 커피의 아침',
+    story:'이른 아침의 호안끼엠 호수. 물안개 사이로 연꽃이 피어나고, 골목 카페에서는 진한 로부스타 커피가 내려집니다. 안개와 꽃과 커피가 뒤섞이던 하노이의 아침 공기를, 한 병에 담았습니다.',
+    poster:'', video:'',
+    bgm:'dFlDRhxR4EQ',
+    price:'₩128,000', size:'EAU DE PARFUM · 50ml',
+    notes:[
+      {k:'TOP', v:'모닝 미스트, 그린 티', w:.88},
+      {k:'MIDDLE', v:'로터스, 자스민', w:.72},
+      {k:'BASE', v:'로스티드 커피, 베티버', w:.55},
+    ],
+    profile:{fresh:.7, floral:.6, woody:.45, sweet:.35},
+    moments:['하루를 여는 아침','카페에서 보내는 오후','차분한 위로가 필요할 때'],
+    meta:{longevity:'5–7시간', season:'봄 · 가을', time:'아침 · 낮'}
+  },
+  {
+    id:'harbin',
+    lat:45.8038, lng:126.5350,
+    name:'HARBIN', country:'CHINA', no:'MEMORY 10',
+    keywords:['하얼빈','중국','china','harbin','빙등','빙설제','cn'],
+    tagline:'얼음빛으로 반짝이던 겨울밤',
+    story:'영하 20도의 하얼빈. 빙등축제의 얼음 성이 푸른 빛을 내며 밤을 밝히고, 차가운 공기에는 눈 냄새와 달큰한 빙탕후루 향이 섞여 있습니다. 숨을 쉴 때마다 반짝이던 그 겨울밤을, 한 병에 가두었습니다.',
+    poster:'', video:'',
+    bgm:'dFlDRhxR4EQ',
+    price:'₩128,000', size:'EAU DE PARFUM · 50ml',
+    notes:[
+      {k:'TOP', v:'아이시 민트, 차가운 시트러스', w:.95},
+      {k:'MIDDLE', v:'아이리스, 눈꽃 어코드', w:.65},
+      {k:'BASE', v:'화이트 머스크, 슈가드 앰버', w:.5},
+    ],
+    profile:{fresh:.95, floral:.35, woody:.3, sweet:.4},
+    moments:['첫눈 오는 날','겨울 밤 산책','시원한 향을 사계절 내내'],
+    meta:{longevity:'5–7시간', season:'겨울', time:'밤'}
+  },
+  {
+    id:'lijiang',
+    lat:26.8721, lng:100.2299,
+    name:'LIJIANG', country:'CHINA', no:'MEMORY 11',
+    keywords:['리장','여강','중국','china','lijiang','옥룡설산','고성','cn'],
+    tagline:'설산 아래, 물길 따라 흐르는 옛 마을',
+    story:'옥룡설산이 내려다보는 리장 고성. 골목마다 맑은 물길이 흐르고, 나무 다리 아래로 산에서 내려온 차가운 물소리가 들립니다. 찻집에서 우려낸 보이차의 깊은 향과 함께, 그 오래된 골목의 시간을 한 병에 담았습니다.',
+    poster:'', video:'',
+    bgm:'JBGhG0M11_8',
+    price:'₩128,000', size:'EAU DE PARFUM · 50ml',
+    notes:[
+      {k:'TOP', v:'마운틴 에어, 클리어 워터 어코드', w:.9},
+      {k:'MIDDLE', v:'목련, 보이차', w:.7},
+      {k:'BASE', v:'시더우드, 스모키 베티버', w:.55},
+    ],
+    profile:{fresh:.75, floral:.4, woody:.7, sweet:.2},
+    moments:['여행지의 첫 아침','고즈넉한 골목 산책','차 한 잔의 여유'],
+    meta:{longevity:'6–8시간', season:'사계절', time:'낮 · 저녁'}
+  },
+  {
+    id:'seoul',
+    lat:37.5665, lng:126.9780,
+    name:'SEOUL', country:'KOREA', no:'MEMORY 12',
+    keywords:['서울','한국','korea','seoul','한강','kr'],
+    tagline:'한강을 건너온 밤바람, 도시의 불빛',
+    story:'자정 무렵의 한강. 다리 위 불빛이 강물 위에 길게 풀어지고, 강바람에는 낮의 열기가 식어가는 도시의 냄새가 섞여 있습니다. 어디를 다녀와도 결국 돌아오게 되는 곳 — 그 밤의 서울을, 한 병에 담았습니다.',
+    poster:'', video:'',
+    bgm:'dFlDRhxR4EQ',
+    price:'₩128,000', size:'EAU DE PARFUM · 50ml',
+    notes:[
+      {k:'TOP', v:'나이트 브리즈 어코드, 블랙커런트', w:.88},
+      {k:'MIDDLE', v:'무화과 잎, 프리지아', w:.65},
+      {k:'BASE', v:'앰버 우드, 머스크, 은은한 인센스', w:.6},
+    ],
+    profile:{fresh:.6, floral:.45, woody:.6, sweet:.3},
+    moments:['퇴근 후 한강 산책','도시의 야경 아래','익숙함이 그리운 날'],
+    meta:{longevity:'6–8시간', season:'사계절', time:'밤'}
+  },
+  {
+    id:'krabi',
+    lat:8.0863, lng:98.9063,
+    name:'KRABI', country:'THAILAND', no:'MEMORY 13',
+    keywords:['크라비','끄라비','태국','thailand','krabi','라일레이','railay','th'],
+    tagline:'석회암 절벽 아래, 에메랄드빛 바다',
+    story:'롱테일 보트가 에메랄드빛 물살을 가르고, 수직으로 솟은 석회암 절벽 아래로 라일레이 해변이 펼쳐집니다. 코코넛과 소금기가 밴 뜨거운 바람, 발끝에 닿던 투명한 물. 그 눈부신 한낮의 크라비를, 한 병에 담았습니다.',
+    poster:'', video:'',
+    bgm:'JBGhG0M11_8',
+    price:'₩128,000', size:'EAU DE PARFUM · 50ml',
+    notes:[
+      {k:'TOP', v:'코코넛 워터, 솔티 브리즈, 라임', w:.95},
+      {k:'MIDDLE', v:'티아레 플라워, 그린 코코넛', w:.7},
+      {k:'BASE', v:'드리프트우드, 화이트 머스크', w:.45},
+    ],
+    profile:{fresh:.85, floral:.5, woody:.3, sweet:.45},
+    moments:['한낮의 해변에서','휴가를 꿈꾸는 출근길','청량한 여름 데일리'],
+    meta:{longevity:'4–6시간', season:'여름', time:'낮'}
+  },
+  {
+    id:'jiuzhaigou',
+    lat:33.2600, lng:103.9180,
+    name:'JIUZHAIGOU', country:'CHINA', no:'MEMORY 14',
+    keywords:['구채구','주자이거우','중국','china','jiuzhaigou','오색호수','cn'],
+    tagline:'숲 속에 숨겨진 오색의 호수',
+    story:'구채구의 물은 믿기 어려울 만큼 투명해서, 호수 바닥에 잠긴 나무까지 그대로 비칩니다. 가을이면 단풍이 물빛에 겹쳐 다섯 가지 색으로 반짝이죠. 그 맑고 차가운 계곡의 공기를, 한 병에 담았습니다.',
+    poster:'', video:'',
+    bgm:'dFlDRhxR4EQ',
+    price:'₩128,000', size:'EAU DE PARFUM · 50ml',
+    notes:[
+      {k:'TOP', v:'크리스탈 워터 어코드, 알파인 허브', w:.92},
+      {k:'MIDDLE', v:'블루 아이리스, 젖은 숲', w:.68},
+      {k:'BASE', v:'화이트 시더, 미네랄 머스크', w:.5},
+    ],
+    profile:{fresh:.9, floral:.4, woody:.55, sweet:.1},
+    moments:['맑은 가을 아침','자연이 그리운 날','투명한 물빛을 닮고 싶을 때'],
+    meta:{longevity:'5–7시간', season:'가을', time:'아침 · 낮'}
+  },
+  {
+    id:'taipei',
+    lat:25.0330, lng:121.5654, stack:1,
+    name:'TAIPEI', country:'TAIWAN', no:'MEMORY 15',
+    keywords:['타이베이','타이페이','대만','taiwan','taipei','베이터우','온천','tw'],
+    tagline:'밤비 내리는 온천 마을의 따뜻한 김',
+    story:'비 내리는 베이터우의 밤. 온천에서 피어오른 하얀 김이 골목을 채우고, 야시장 쪽에서는 따뜻한 음식 냄새가 흘러나옵니다. 몸도 마음도 노곤하게 풀어지던 그 밤의 온기를, 한 병에 담았습니다.',
+    poster:'', video:'',
+    bgm:'JBGhG0M11_8',
+    price:'₩128,000', size:'EAU DE PARFUM · 50ml',
+    notes:[
+      {k:'TOP', v:'히노키 스팀, 진저', w:.85},
+      {k:'MIDDLE', v:'미네랄 어코드, 밀키 자스민', w:.7},
+      {k:'BASE', v:'크리미 샌달우드, 앰버', w:.58},
+    ],
+    profile:{fresh:.5, floral:.45, woody:.6, sweet:.5},
+    moments:['쌀쌀한 밤의 휴식','반신욕 후의 여운처럼','노곤한 하루의 끝'],
+    meta:{longevity:'6–8시간', season:'가을 · 겨울', time:'밤'}
+  },
+  {
+    id:'emeishan',
+    lat:29.5520, lng:103.3400,
+    name:'EMEISHAN', country:'CHINA', no:'MEMORY 16',
+    keywords:['아미산','어메이샨','중국','china','emeishan','emei','금정','운해','cn'],
+    tagline:'구름바다 위로 떠오르던 금빛 새벽',
+    story:'새벽의 아미산 금정. 발아래로 구름바다가 끝없이 펼쳐지고, 첫 햇살이 금빛 사원 지붕에 닿는 순간 사방이 향 연기와 함께 밝아옵니다. 구름 위에서 맞이한 그 새벽을, 한 병에 담았습니다.',
+    poster:'', video:'',
+    bgm:'dFlDRhxR4EQ',
+    price:'₩128,000', size:'EAU DE PARFUM · 50ml',
+    notes:[
+      {k:'TOP', v:'하이 마운틴 에어, 새벽 이슬', w:.88},
+      {k:'MIDDLE', v:'템플 인센스, 오키드', w:.72},
+      {k:'BASE', v:'금빛 앰버, 프랑킨센스, 드라이 우드', w:.6},
+    ],
+    profile:{fresh:.55, floral:.35, woody:.75, sweet:.25},
+    moments:['특별한 새벽의 시작','고요히 집중하고 싶을 때','향이 깊어지는 계절에'],
+    meta:{longevity:'7–9시간', season:'가을 · 겨울', time:'새벽 · 밤'}
+  },
+  {
+    id:'paris',
+    lat:48.8566, lng:2.3522,
+    name:'PARIS', country:'FRANCE', no:'MEMORY 17',
+    keywords:['파리','프랑스','france','paris','마레','fr'],
+    tagline:'비 갠 자정, 가로등 아래 젖은 돌길',
+    story:'자정의 마레 지구. 방금 비가 지나간 돌길이 가로등 불빛을 머금어 반짝이고, 문 닫힌 서점 앞에는 오래된 종이 냄새가 어렴풋이 남아 있습니다. 그 새벽 파리의 우아한 고요를, 한 병에 담았습니다.',
+    poster:'', video:'',
+    bgm:'dFlDRhxR4EQ',
+    price:'₩128,000', size:'EAU DE PARFUM · 50ml',
+    notes:[
+      {k:'TOP', v:'레인 온 스톤, 바이올렛', w:.85},
+      {k:'MIDDLE', v:'아이리스, 파우더리 미모사', w:.75},
+      {k:'BASE', v:'소프트 레더, 캐시미어 우드', w:.55},
+    ],
+    profile:{fresh:.45, floral:.65, woody:.5, sweet:.35},
+    moments:['늦은 밤의 산책','클래식한 무드가 필요할 때','파우더리한 향을 찾는다면'],
+    meta:{longevity:'6–8시간', season:'가을 · 겨울', time:'밤'}
+  },
+  {
+    id:'amalfi',
+    lat:40.6340, lng:14.6027,
+    name:'AMALFI', country:'ITALY', no:'MEMORY 18',
+    keywords:['아말피','이탈리아','italy','amalfi','포지타노','positano','it'],
+    tagline:'절벽 위 레몬나무, 지중해의 태양',
+    story:'아말피의 절벽길. 계단식 밭을 가득 채운 레몬나무 사이로 짙푸른 지중해가 눈부시게 빛납니다. 손끝에 밴 레몬 껍질의 향과 뜨거운 태양 — 그 여름 해안의 한낮을, 한 병에 담았습니다.',
+    poster:'', video:'',
+    bgm:'JBGhG0M11_8',
+    price:'₩128,000', size:'EAU DE PARFUM · 50ml',
+    notes:[
+      {k:'TOP', v:'아말피 레몬, 시트론 제스트', w:.95},
+      {k:'MIDDLE', v:'지중해 바질, 화이트 블라썸', w:.65},
+      {k:'BASE', v:'선워시드 시더, 머스크', w:.42},
+    ],
+    profile:{fresh:.95, floral:.45, woody:.3, sweet:.3},
+    moments:['눈부신 한낮','여름의 시작을 알리듯','시트러스 마니아라면'],
+    meta:{longevity:'4–6시간', season:'여름', time:'낮'}
+  },
+  {
+    id:'santorini',
+    lat:36.4618, lng:25.3753,
+    name:'SANTORINI', country:'GREECE', no:'MEMORY 19',
+    keywords:['산토리니','그리스','greece','santorini','이아','oia','gr'],
+    tagline:'하얀 벽이 노을에 물드는 시간',
+    story:'이아 마을의 저녁. 새하얀 벽과 파란 지붕이 붉은 노을에 서서히 물들고, 에게해에서 불어온 바람에는 무화과와 바다 소금의 냄새가 실려 있습니다. 그 노을의 온도를, 한 병에 담았습니다.',
+    poster:'', video:'',
+    bgm:'JBGhG0M11_8',
+    price:'₩128,000', size:'EAU DE PARFUM · 50ml',
+    notes:[
+      {k:'TOP', v:'에게안 브리즈, 화이트 그레이프', w:.88},
+      {k:'MIDDLE', v:'피그 밀크, 화이트 플로럴', w:.7},
+      {k:'BASE', v:'선셋 앰버, 스무스 우드', w:.5},
+    ],
+    profile:{fresh:.7, floral:.55, woody:.35, sweet:.45},
+    moments:['노을 지는 저녁','여름 휴가의 한 장면처럼','로맨틱한 순간에'],
+    meta:{longevity:'5–7시간', season:'여름 · 초가을', time:'저녁'}
+  },
+  {
+    id:'marrakech',
+    lat:31.6295, lng:-7.9811,
+    name:'MARRAKECH', country:'MOROCCO', no:'MEMORY 20',
+    keywords:['마라케시','마라케쉬','모로코','morocco','marrakech','수크','ma'],
+    tagline:'노을빛 광장, 향신료와 오렌지꽃의 시장',
+    story:'해질녘의 제마엘프나 광장. 수크 골목마다 사프란과 시나몬이 산처럼 쌓여 있고, 담장 너머 리아드 정원에서는 오렌지 블라썸 향이 흘러나옵니다. 그 붉은 도시의 저녁을, 한 병에 담았습니다.',
+    poster:'', video:'',
+    bgm:'dFlDRhxR4EQ',
+    price:'₩128,000', size:'EAU DE PARFUM · 50ml',
+    notes:[
+      {k:'TOP', v:'사프란, 시나몬', w:.9},
+      {k:'MIDDLE', v:'오렌지 블라썸, 로즈', w:.75},
+      {k:'BASE', v:'웜 앰버, 시더 스모크', w:.65},
+    ],
+    profile:{fresh:.3, floral:.6, woody:.65, sweet:.6},
+    moments:['이국이 그리운 저녁','깊고 화려한 무드로','향으로 존재감을 남기고 싶을 때'],
+    meta:{longevity:'8–10시간', season:'가을 · 겨울', time:'저녁 · 밤'}
+  },
+  {
+    id:'newyork',
+    lat:40.7128, lng:-74.0060,
+    name:'NEW YORK', country:'USA', no:'MEMORY 21',
+    keywords:['뉴욕','미국','usa','america','new york','newyork','맨해튼','us'],
+    tagline:'지하 재즈바, 위스키와 낮게 흐르는 색소폰',
+    story:'자정의 맨해튼, 계단 아래 스피크이지 바. 낮게 흐르는 색소폰과 잔 속에서 흔들리는 위스키, 가죽 소파에 밴 오래된 시간의 냄새. 그 밤의 뉴욕을, 한 병에 담았습니다.',
+    poster:'', video:'',
+    bgm:'JBGhG0M11_8',
+    price:'₩128,000', size:'EAU DE PARFUM · 50ml',
+    notes:[
+      {k:'TOP', v:'위스키 어코드, 베르가못 제스트', w:.85},
+      {k:'MIDDLE', v:'토바코 리프, 럼', w:.75},
+      {k:'BASE', v:'다크 레더, 바닐라 우드', w:.68},
+    ],
+    profile:{fresh:.2, floral:.2, woody:.85, sweet:.5},
+    moments:['격식 있는 밤 자리','위스키 한 잔과 함께','묵직한 존재감이 필요할 때'],
+    meta:{longevity:'8–10시간', season:'가을 · 겨울', time:'밤'}
+  },
+  {
+    id:'sydney',
+    lat:-33.8688, lng:151.2093,
+    name:'SYDNEY', country:'AUSTRALIA', no:'MEMORY 22',
+    keywords:['시드니','호주','australia','sydney','오페라하우스','au'],
+    tagline:'유칼립투스 바람이 부는 항구의 아침',
+    story:'이른 아침의 서큘러 키. 바다 냄새에 유칼립투스 잎의 알싸한 향이 섞여 불어오고, 오페라하우스의 흰 지붕 위로 남반구의 햇살이 쏟아집니다. 그 상쾌한 아침을, 한 병에 담았습니다.',
+    poster:'', video:'',
+    bgm:'dFlDRhxR4EQ',
+    price:'₩128,000', size:'EAU DE PARFUM · 50ml',
+    notes:[
+      {k:'TOP', v:'유칼립투스, 쿨 시트러스', w:.95},
+      {k:'MIDDLE', v:'티트리, 오션 플라워', w:.6},
+      {k:'BASE', v:'아쿠아틱 머스크, 라이트 우드', w:.42},
+    ],
+    profile:{fresh:.95, floral:.3, woody:.35, sweet:.15},
+    moments:['운동 후 샤워처럼','상쾌한 출근길','맑은 정신이 필요한 아침'],
+    meta:{longevity:'4–6시간', season:'봄 · 여름', time:'아침 · 낮'}
+  },
+  {
+    id:'reykjavik',
+    lat:64.1466, lng:-21.9426,
+    name:'REYKJAVÍK', country:'ICELAND', no:'MEMORY 23',
+    keywords:['레이캬비크','아이슬란드','iceland','reykjavik','오로라','aurora','is'],
+    tagline:'검은 하늘에 초록빛으로 흐르던 오로라',
+    story:'영하의 레이캬비크 외곽, 불빛 하나 없는 검은 들판. 하늘 가득 초록과 보랏빛 오로라가 커튼처럼 흔들리고, 차가운 공기에서는 눈과 화산암의 냄새가 납니다. 숨을 멈추게 하던 그 밤하늘을, 한 병에 담았습니다.',
+    poster:'', video:'',
+    bgm:'JBGhG0M11_8',
+    price:'₩128,000', size:'EAU DE PARFUM · 50ml',
+    notes:[
+      {k:'TOP', v:'아틱 에어, 주니퍼', w:.9},
+      {k:'MIDDLE', v:'오존 어코드, 노던 플라워', w:.62},
+      {k:'BASE', v:'화산암 미네랄, 그레이 머스크', w:.5},
+    ],
+    profile:{fresh:.9, floral:.35, woody:.4, sweet:.2},
+    moments:['버킷리스트를 꿈꾸듯','고요한 겨울밤','신비로운 무드가 필요할 때'],
+    meta:{longevity:'6–8시간', season:'겨울', time:'밤'}
   }
 ];
 
 /* 국가 정의 — 지구본 1단계(국가 마커)에서 사용.
    새 나라를 추가할 땐 여기에 한 줄, 그리고 위 perfumes에 country를 맞춰 넣으면 됩니다. */
 const countries = [
-  {id:'JAPAN',   label:'JAPAN',   ko:'일본',   flag:'🇯🇵', lat:36.5,  lng:138.0,  zoom:1.15},
-  {id:'TAIWAN',  label:'TAIWAN',  ko:'대만',   flag:'🇹🇼', lat:23.7,  lng:121.0,  zoom:0.9},
-  {id:'CANADA',  label:'CANADA',  ko:'캐나다', flag:'🇨🇦', lat:51.5,  lng:-115.9, zoom:1.5},
-  {id:'VIETNAM', label:'VIETNAM', ko:'베트남', flag:'🇻🇳', lat:14.0,  lng:108.3,  zoom:1.35},
-  {id:'CHINA',   label:'CHINA',   ko:'중국',   flag:'🇨🇳', lat:24.5,  lng:118.1,  zoom:1.2},
+  {id:'KOREA',     label:'KOREA',     ko:'대한민국',   cc:'kr', lat:36.8,  lng:127.5,  zoom:0.8, stack:1},
+  {id:'JAPAN',     label:'JAPAN',     ko:'일본',       cc:'jp', lat:35.1,  lng:133.5,  zoom:1.0},
+  {id:'TAIWAN',    label:'TAIWAN',    ko:'대만',       cc:'tw', lat:24.9,  lng:121.7,  zoom:0.9},
+  {id:'CHINA',     label:'CHINA',     ko:'중국',       cc:'cn', lat:35.5,  lng:113.0,  zoom:2.0},
+  {id:'VIETNAM',   label:'VIETNAM',   ko:'베트남',     cc:'vn', lat:15.7,  lng:106.0,  zoom:1.5},
+  {id:'THAILAND',  label:'THAILAND',  ko:'태국',       cc:'th', lat:9.5,   lng:99.0,   zoom:0.9, stack:1},
+  {id:'CANADA',    label:'CANADA',    ko:'캐나다',     cc:'ca', lat:51.5,  lng:-115.9, zoom:1.2},
+  {id:'USA',       label:'USA',       ko:'미국',       cc:'us', lat:40.7,  lng:-74.8,  zoom:0.9},
+  {id:'FRANCE',    label:'FRANCE',    ko:'프랑스',     cc:'fr', lat:47.0,  lng:2.4,    zoom:0.9},
+  {id:'ITALY',     label:'ITALY',     ko:'이탈리아',   cc:'it', lat:41.8,  lng:13.0,   zoom:0.9, stack:1},
+  {id:'GREECE',    label:'GREECE',    ko:'그리스',     cc:'gr', lat:37.3,  lng:24.5,   zoom:0.85},
+  {id:'MOROCCO',   label:'MOROCCO',   ko:'모로코',     cc:'ma', lat:31.7,  lng:-7.9,   zoom:0.9},
+  {id:'ICELAND',   label:'ICELAND',   ko:'아이슬란드', cc:'is', lat:64.3,  lng:-20.5,  zoom:0.8},
+  {id:'AUSTRALIA', label:'AUSTRALIA', ko:'호주',       cc:'au', lat:-33.2, lng:150.3,  zoom:1.1},
 ];
 function citiesOf(countryId){ return perfumes.filter(p => p.country === countryId); }
 
@@ -722,20 +1200,23 @@ function playBgmFor(p){
 let viewLevel = 'world';      // 'world' = 국가 마커, 'country' = 도시 마커
 let activeCountry = null;
 
+/* 국기 이미지 (이모지는 윈도우에서 안 보여서 이미지로 통일) */
+const flagImg = (c)=>`<img class="flag" src="https://flagcdn.com/w40/${c.cc}.png" alt="${c.label}" onerror="this.style.display='none'">`;
+
 // 국가 마커 (1단계)
 const countryMarkerHtml = (c)=>{
   const el = document.createElement('div');
-  el.className = 'marker marker-country';
+  el.className = 'marker marker-country' + (c.stack ? ' stack' : '');
   const n = citiesOf(c.id).length;
   el.innerHTML = `<div class="ring"></div>
-    <span class="tag"><b>${c.flag}</b> ${c.label}<i>${n} scent${n>1?'s':''}</i></span>`;
+    <span class="tag">${flagImg(c)} ${c.label}<i>${n} scent${n>1?'s':''}</i></span>`;
   el.onclick = (e)=>{ e.stopPropagation(); enterCountry(c); };
   return el;
 };
 // 도시 마커 (2단계)
 const cityMarkerHtml = (d)=>{
   const el = document.createElement('div');
-  el.className = 'marker marker-city';
+  el.className = 'marker marker-city' + (d.stack ? ' stack' : '');
   el.innerHTML = `<div class="ring"></div><span class="tag">${d.name}</span>`;
   el.onclick = (e)=>{ e.stopPropagation(); flyAndOpen(d); };
   return el;
@@ -789,7 +1270,7 @@ function enterCountry(c){
   if (world){
     world.controls().autoRotate = false;
     world.htmlElementsData([]).ringsData([]);       // 마커 정리 후
-    world.pointOfView({lat:c.lat, lng:c.lng, altitude: window.innerWidth < 920 ? 1.9 : 1.35}, 1500);
+    world.pointOfView({lat:c.lat, lng:c.lng, altitude: (c.zoom || 1.35) * (window.innerWidth < 920 ? 1.35 : 1)}, 1500);
     const cities = citiesOf(c.id);
     setTimeout(()=>{
       world.htmlElementsData(cities).htmlElement(cityMarkerHtml)
@@ -824,7 +1305,7 @@ function updateBreadcrumb(){
   bc.innerHTML =
     `<button class="bc-home" onclick="backToWorld()">✦ WORLD</button>
      <span class="bc-sep">/</span>
-     <span class="bc-now">${activeCountry.flag} ${activeCountry.label}</span>`;
+     <span class="bc-now">${flagImg(activeCountry)} ${activeCountry.label}</span>`;
 }
 
 /* ══════════ 검색 + 자동완성 ══════════ */
@@ -906,6 +1387,37 @@ function openDetail(p){
       <span class="note-bar" style="--w:${n.w}"></span>
     </div>`).join('');
 
+  // 향 성격 그래프 (데이터 없으면 섹션 숨김)
+  const profSec = document.getElementById('dProfileSec');
+  if (p.profile){
+    const axes = [
+      {key:'fresh',  k:'FRESH',  ko:'청량'},
+      {key:'floral', k:'FLORAL', ko:'꽃향'},
+      {key:'woody',  k:'WOODY',  ko:'우디'},
+      {key:'sweet',  k:'SWEET',  ko:'달콤'},
+    ];
+    document.getElementById('dProfile').innerHTML = axes.map(a=>`
+      <div class="p-row">
+        <div class="p-head"><span class="p-k">${a.k}</span><span class="p-ko">${a.ko}</span></div>
+        <div class="p-track"><div class="p-fill" style="--w:${p.profile[a.key] ?? 0}"></div></div>
+      </div>`).join('');
+    profSec.style.display = 'block';
+  } else profSec.style.display = 'none';
+
+  // 추천 상황 + 메타 (데이터 없으면 섹션 숨김)
+  const momSec = document.getElementById('dMomentsSec');
+  if (p.moments || p.meta){
+    document.getElementById('dMoments').innerHTML =
+      (p.moments || []).map(m=>`<span class="pill">${m}</span>`).join('');
+    const mEl = document.getElementById('dMeta');
+    if (p.meta){
+      mEl.innerHTML =
+        `지속 <b>${p.meta.longevity}</b><span class="sep">·</span>계절 <b>${p.meta.season}</b><span class="sep">·</span>추천 <b>${p.meta.time}</b>`;
+      mEl.style.display = 'block';
+    } else mEl.style.display = 'none';
+    momSec.style.display = 'block';
+  } else momSec.style.display = 'none';
+
   if (bgmPlayer && typeof bgmPlayer.pauseVideo === 'function') bgmPlayer.pauseVideo();
 
   const soon = document.getElementById('dVideoSoon');
@@ -977,7 +1489,7 @@ function closeDetail(){
            .ringColor(()=> t => `rgba(233,211,181,${Math.max(0,.55*(1-t))})`)
            .ringMaxRadius(2.4).ringPropagationSpeed(0.9).ringRepeatPeriod(1600);
       world.pointOfView({lat:activeCountry.lat, lng:activeCountry.lng,
-        altitude: window.innerWidth < 920 ? 1.9 : 1.35}, 1200);
+        altitude: (activeCountry.zoom || 1.35) * (window.innerWidth < 920 ? 1.35 : 1)}, 1200);
     }
   }
 }
@@ -985,6 +1497,7 @@ function soonEl(){ return document.getElementById('dVideoSoon'); }
 detail.addEventListener('click', e=>{ if (e.target === detail) closeDetail(); });
 document.addEventListener('keydown', e=>{
   if (e.key === 'Escape' && detail.classList.contains('open')) closeDetail();
+  if (e.key === 'Escape' && document.getElementById('quiz').classList.contains('open')) closeQuiz();
 });
 
 function addToCart(){
@@ -1002,7 +1515,7 @@ function renderCards(){
       countries.map(c=>{
         const n = citiesOf(c.id).length;
         return `<button class="card" onclick="enterCountry(countries.find(x=>x.id==='${c.id}'))">
-          <span class="no">${c.flag} ${c.label}</span>
+          <span class="no">${flagImg(c)} ${c.label}</span>
           <span class="name kr">${c.ko}</span>
           <span class="sub">${n}개의 향 컬렉션</span>
         </button>`;
@@ -1014,7 +1527,7 @@ function renderCards(){
           <span class="sub">${c.sub}</span>
         </div>`).join('');
   } else {
-    eyebrow.textContent = `${activeCountry.flag} ${activeCountry.label} COLLECTION`;
+    eyebrow.innerHTML = `${flagImg(activeCountry)} ${activeCountry.label} COLLECTION`;
     wrap.innerHTML = citiesOf(activeCountry.id).map(p=>`
       <button class="card" onclick="flyAndOpen(perfumes.find(x=>x.id==='${p.id}'))">
         <span class="no">${p.no}</span>
@@ -1024,6 +1537,102 @@ function renderCards(){
   }
 }
 renderCards();
+
+/* ══════════ SCENT FINDER 퀴즈 ══════════
+   각 선택지가 향수별 점수를 더하고, 3문항 후 최고점 향수를 추천합니다. */
+const quizQs = [
+  { q:'어떤 여행이 그리우세요?',
+    opts:[
+      {e:'🌊', t:'한여름 밤바다', s:'파도 소리, 하늘 위의 불꽃', sc:{phuquoc:3, xiamen:1, fukuoka:1}},
+      {e:'🏝️', t:'눈부신 절벽과 바다', s:'에메랄드빛 물, 레몬빛 태양', sc:{krabi:2, amalfi:2, santorini:1, sydney:1}},
+      {e:'🏮', t:'홍등 켜진 밤골목', s:'오래된 찻집과 인센스 연기', sc:{jiufen:3, hoian:2}},
+      {e:'🍁', t:'가을의 호수와 숲', s:'차가운 공기, 물 위의 단풍', sc:{banff:3, jiuzhaigou:2, kanazawa:1}},
+      {e:'⛩️', t:'고요한 옛 거리', s:'이끼 낀 돌길, 댓잎 스치는 바람', sc:{kanazawa:2, kyoto:2, lijiang:1}},
+      {e:'☕', t:'안개 낀 호수의 아침', s:'연꽃, 그리고 진한 커피 한 잔', sc:{hanoi:3, kanazawa:1}},
+      {e:'🕌', t:'향신료 가득한 시장', s:'사프란, 노을빛 광장', sc:{marrakech:3, hoian:1}},
+      {e:'🌃', t:'불빛이 흐르는 밤의 도시', s:'강바람, 재즈, 젖은 돌길', sc:{seoul:2, newyork:2, paris:2, taipei:1}},
+      {e:'🗻', t:'구름 위 산사의 새벽', s:'운해 너머 떠오르는 금빛 해', sc:{emeishan:3, lijiang:1}},
+      {e:'❄️', t:'겨울 — 눈, 얼음, 오로라', s:'숨을 멈추게 하는 밤하늘', sc:{reykjavik:3, harbin:2}},
+    ]},
+  { q:'어떤 분위기를 원하세요?',
+    opts:[
+      {e:'✨', t:'몽환적이고 아련하게', s:'꿈결 같은 잔향', sc:{phuquoc:2, reykjavik:2, jiufen:1, xiamen:1}},
+      {e:'🕯️', t:'깊고 차분하게', s:'무게감 있는 밤의 향', sc:{jiufen:2, banff:2, emeishan:2, lijiang:2, newyork:1}},
+      {e:'🫧', t:'맑고 투명하게', s:'깨끗하고 영롱한 첫인상', sc:{fukuoka:3, harbin:2, jiuzhaigou:2, krabi:2, kanazawa:1}},
+      {e:'🌿', t:'싱그럽고 청량하게', s:'푸른 잎사귀 같은 상쾌함', sc:{kyoto:3, sydney:3, hanoi:2, lijiang:1}},
+      {e:'🌅', t:'따뜻하고 포근하게', s:'노을처럼 감싸는 온기', sc:{xiamen:2, hoian:2, taipei:3, hanoi:1}},
+      {e:'🥂', t:'세련되고 도회적으로', s:'격이 다른 무드', sc:{paris:3, seoul:2, newyork:2, fukuoka:1}},
+      {e:'🍯', t:'달콤하고 관능적으로', s:'기억에 남는 잔향', sc:{marrakech:2, amalfi:1, santorini:1, hoian:1, taipei:1}},
+    ]},
+  { q:'언제 뿌리고 싶으세요?',
+    opts:[
+      {e:'🌄', t:'이른 아침', s:'하루가 시작되는 공기 속에', sc:{hanoi:2, emeishan:2, kyoto:1, jiuzhaigou:1, sydney:1, kanazawa:1}},
+      {e:'☀️', t:'환한 낮', s:'일상 속 은은하게', sc:{krabi:2, amalfi:2, fukuoka:1, kyoto:1, sydney:1, banff:1}},
+      {e:'🌆', t:'해질 무렵', s:'하루의 전환점에', sc:{santorini:2, xiamen:2, hoian:1, seoul:1, lijiang:1, marrakech:1}},
+      {e:'🌙', t:'깊은 밤', s:'특별한 밤의 분위기로', sc:{jiufen:2, newyork:2, seoul:2, phuquoc:1, harbin:1, reykjavik:1, paris:1, taipei:1}},
+    ]},
+];
+let qStep = 0, qScores = {};
+const quizEl = document.getElementById('quiz');
+
+function openQuiz(){
+  qStep = 0; qScores = {};
+  quizEl.classList.add('open');
+  renderQuizStep();
+}
+function closeQuiz(){ quizEl.classList.remove('open'); }
+quizEl.addEventListener('click', e=>{ if (e.target === quizEl) closeQuiz(); });
+
+function renderQuizStep(){
+  const step = quizQs[qStep];
+  document.getElementById('quizBody').innerHTML = `
+    <h3 class="q-title">${step.q}</h3>
+    <div class="q-opts">
+      ${step.opts.map((o,i)=>`
+        <button class="q-opt" onclick="pickQuizOpt(${i})">
+          <span class="qe">${o.e}</span>
+          <span><span class="qt">${o.t}</span><br><span class="qs">${o.s}</span></span>
+        </button>`).join('')}
+    </div>`;
+  document.getElementById('qDots').innerHTML =
+    quizQs.map((_,i)=>`<i class="${i<=qStep?'on':''}"></i>`).join('');
+}
+function pickQuizOpt(i){
+  const sc = quizQs[qStep].opts[i].sc;
+  for (const id in sc) qScores[id] = (qScores[id]||0) + sc[id];
+  qStep++;
+  if (qStep < quizQs.length) renderQuizStep();
+  else renderQuizResult();
+}
+function renderQuizResult(){
+  // 최고점 향수 (동점이면 컬렉션 순서 우선)
+  let best = perfumes[0], bestScore = -1;
+  for (const p of perfumes){
+    const s = qScores[p.id] || 0;
+    if (s > bestScore){ best = p; bestScore = s; }
+  }
+  document.getElementById('quizBody').innerHTML = `
+    <div class="q-result">
+      <p class="q-r-eyebrow">당신의 여행이 향으로 남는다면</p>
+      <div class="q-poster">${best.poster
+        ? `<img src="${best.poster}" alt="${best.name}">`
+        : `<div class="q-nop"><span>✦</span><em>POSTER<br>COMING SOON</em></div>`}</div>
+      <h3 class="q-r-name">${best.name}</h3>
+      <p class="q-r-tag">${best.no} · ${best.tagline}</p>
+      <div class="q-r-btns">
+        <button class="btn-buy" onclick="goToScent('${best.id}')">지구본에서 만나기</button>
+        <button class="btn-ghost" onclick="openQuiz()">다시 하기</button>
+      </div>
+    </div>`;
+  document.getElementById('qDots').innerHTML = '';
+}
+function goToScent(id){
+  closeQuiz();
+  const p = perfumes.find(x=>x.id===id); if (!p) return;
+  const c = countries.find(x=>x.id===p.country);
+  if (c){ activeCountry = c; viewLevel = 'country'; updateBreadcrumb(); renderCards(); }
+  flyAndOpen(p);
+}
 
 /* ══════════ 토스트 ══════════ */
 let toastTimer;
