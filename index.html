@@ -270,7 +270,19 @@ body{
 @keyframes mediaIn{from{opacity:0;transform:translateY(34px) scale(.97)}to{opacity:1;transform:none}}
 .d-poster-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .d-poster-frame video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
-  background:#000;display:none;outline:none;z-index:4}
+  background:#000;display:none;outline:none;z-index:4;transition:opacity .4s ease}
+.d-loading{
+  position:absolute;inset:0;z-index:6;display:none;flex-direction:column;
+  align-items:center;justify-content:center;gap:16px;pointer-events:none;
+  background:rgba(6,5,10,.45);
+}
+.d-loading .spin{
+  width:34px;height:34px;border-radius:50%;
+  border:1px solid rgba(233,211,181,.2);border-top-color:var(--champagne);
+  animation:spin .9s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.d-loading em{font-style:normal;font-size:9px;letter-spacing:.44em;text-indent:.44em;color:var(--champagne)}
 .d-coords{
   position:absolute;left:18px;top:16px;z-index:5;
   font-size:9px;letter-spacing:.32em;color:rgba(233,211,181,.85);
@@ -558,6 +570,7 @@ body{
           <span class="d-play-label">SCENT FILM</span>
         </button>
         <video id="dVideo" controls playsinline preload="none"></video>
+        <div class="d-loading" id="dLoading"><span class="spin"></span><em>LOADING</em></div>
         <div class="d-video-soon" id="dVideoSoon">
           <span class="soon-mark">✦</span>
           <span class="soon-t">SCENT FILM</span>
@@ -806,7 +819,7 @@ const perfumes = [
     keywords:['교토','일본','japan','kyoto','아라시야마','arashiyama','jp'],
     tagline:'대나무 숲을 지나는 초록의 바람',
     story:'이른 아침의 아라시야마 대숲. 하늘까지 뻗은 대나무 사이로 바람이 지나가면, 수만 장의 댓잎이 서로 스치며 소리를 냅니다. 이끼 낀 돌길과 찻집의 말차 향, 그 서늘하고 푸른 공기를 한 병에 담았습니다.',
-    poster:'', /* kyoto.png 업로드 후 파일명 입력 */
+    poster:'kyoto.jpg', /* kyoto.png 업로드 후 파일명 입력 */
     video:'',  /* kyoto.mp4 업로드 후 파일명 입력 */
     bgm:'dFlDRhxR4EQ',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
@@ -826,7 +839,7 @@ const perfumes = [
     keywords:['호이안','베트남','vietnam','hoian','hoi an','올드타운','vn'],
     tagline:'노란 골목에 흐드러진 부겐빌레아',
     story:'해질녘의 호이안 올드타운. 노란 벽을 타고 오른 진분홍 부겐빌레아가 저녁 빛에 물들고, 골목 끝에서는 잘 익은 열대 과일의 달큰한 향이 흘러나옵니다. 그 노랗고 분홍했던 저녁을, 한 병에 담았습니다.',
-    poster:'', video:'',
+    poster:'hoian.jpg', video:'',
     bgm:'JBGhG0M11_8',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -845,7 +858,7 @@ const perfumes = [
     keywords:['하노이','베트남','vietnam','hanoi','호안끼엠','vn'],
     tagline:'안개 낀 호수, 연꽃과 커피의 아침',
     story:'이른 아침의 호안끼엠 호수. 물안개 사이로 연꽃이 피어나고, 골목 카페에서는 진한 로부스타 커피가 내려집니다. 안개와 꽃과 커피가 뒤섞이던 하노이의 아침 공기를, 한 병에 담았습니다.',
-    poster:'', video:'',
+    poster:'hanoi.jpg', video:'',
     bgm:'dFlDRhxR4EQ',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -864,7 +877,7 @@ const perfumes = [
     keywords:['하얼빈','중국','china','harbin','빙등','빙설제','cn'],
     tagline:'얼음빛으로 반짝이던 겨울밤',
     story:'영하 20도의 하얼빈. 빙등축제의 얼음 성이 푸른 빛을 내며 밤을 밝히고, 차가운 공기에는 눈 냄새와 달큰한 빙탕후루 향이 섞여 있습니다. 숨을 쉴 때마다 반짝이던 그 겨울밤을, 한 병에 가두었습니다.',
-    poster:'', video:'',
+    poster:'harbin.jpg', video:'',
     bgm:'dFlDRhxR4EQ',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -883,7 +896,7 @@ const perfumes = [
     keywords:['리장','여강','중국','china','lijiang','옥룡설산','고성','cn'],
     tagline:'설산 아래, 물길 따라 흐르는 옛 마을',
     story:'옥룡설산이 내려다보는 리장 고성. 골목마다 맑은 물길이 흐르고, 나무 다리 아래로 산에서 내려온 차가운 물소리가 들립니다. 찻집에서 우려낸 보이차의 깊은 향과 함께, 그 오래된 골목의 시간을 한 병에 담았습니다.',
-    poster:'', video:'',
+    poster:'lijiang.jpg', video:'',
     bgm:'JBGhG0M11_8',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -902,7 +915,7 @@ const perfumes = [
     keywords:['서울','한국','korea','seoul','한강','kr'],
     tagline:'한강을 건너온 밤바람, 도시의 불빛',
     story:'자정 무렵의 한강. 다리 위 불빛이 강물 위에 길게 풀어지고, 강바람에는 낮의 열기가 식어가는 도시의 냄새가 섞여 있습니다. 어디를 다녀와도 결국 돌아오게 되는 곳 — 그 밤의 서울을, 한 병에 담았습니다.',
-    poster:'', video:'',
+    poster:'seoul.jpg', video:'',
     bgm:'dFlDRhxR4EQ',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -921,7 +934,7 @@ const perfumes = [
     keywords:['크라비','끄라비','태국','thailand','krabi','라일레이','railay','th'],
     tagline:'석회암 절벽 아래, 에메랄드빛 바다',
     story:'롱테일 보트가 에메랄드빛 물살을 가르고, 수직으로 솟은 석회암 절벽 아래로 라일레이 해변이 펼쳐집니다. 코코넛과 소금기가 밴 뜨거운 바람, 발끝에 닿던 투명한 물. 그 눈부신 한낮의 크라비를, 한 병에 담았습니다.',
-    poster:'', video:'',
+    poster:'krabi.jpg', video:'',
     bgm:'JBGhG0M11_8',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -940,7 +953,7 @@ const perfumes = [
     keywords:['구채구','주자이거우','중국','china','jiuzhaigou','오색호수','cn'],
     tagline:'숲 속에 숨겨진 오색의 호수',
     story:'구채구의 물은 믿기 어려울 만큼 투명해서, 호수 바닥에 잠긴 나무까지 그대로 비칩니다. 가을이면 단풍이 물빛에 겹쳐 다섯 가지 색으로 반짝이죠. 그 맑고 차가운 계곡의 공기를, 한 병에 담았습니다.',
-    poster:'', video:'',
+    poster:'jiuzhaigou.jpg', video:'',
     bgm:'dFlDRhxR4EQ',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -959,7 +972,7 @@ const perfumes = [
     keywords:['타이베이','타이페이','대만','taiwan','taipei','베이터우','온천','tw'],
     tagline:'밤비 내리는 온천 마을의 따뜻한 김',
     story:'비 내리는 베이터우의 밤. 온천에서 피어오른 하얀 김이 골목을 채우고, 야시장 쪽에서는 따뜻한 음식 냄새가 흘러나옵니다. 몸도 마음도 노곤하게 풀어지던 그 밤의 온기를, 한 병에 담았습니다.',
-    poster:'', video:'',
+    poster:'taipei.jpg', video:'',
     bgm:'JBGhG0M11_8',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -978,7 +991,7 @@ const perfumes = [
     keywords:['아미산','어메이샨','중국','china','emeishan','emei','금정','운해','cn'],
     tagline:'구름바다 위로 떠오르던 금빛 새벽',
     story:'새벽의 아미산 금정. 발아래로 구름바다가 끝없이 펼쳐지고, 첫 햇살이 금빛 사원 지붕에 닿는 순간 사방이 향 연기와 함께 밝아옵니다. 구름 위에서 맞이한 그 새벽을, 한 병에 담았습니다.',
-    poster:'', video:'',
+    poster:'emeishan.jpg', video:'',
     bgm:'dFlDRhxR4EQ',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -997,7 +1010,7 @@ const perfumes = [
     keywords:['파리','프랑스','france','paris','마레','fr'],
     tagline:'비 갠 자정, 가로등 아래 젖은 돌길',
     story:'자정의 마레 지구. 방금 비가 지나간 돌길이 가로등 불빛을 머금어 반짝이고, 문 닫힌 서점 앞에는 오래된 종이 냄새가 어렴풋이 남아 있습니다. 그 새벽 파리의 우아한 고요를, 한 병에 담았습니다.',
-    poster:'', video:'',
+    poster:'paris.jpg', video:'',
     bgm:'dFlDRhxR4EQ',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -1016,7 +1029,7 @@ const perfumes = [
     keywords:['아말피','이탈리아','italy','amalfi','포지타노','positano','it'],
     tagline:'절벽 위 레몬나무, 지중해의 태양',
     story:'아말피의 절벽길. 계단식 밭을 가득 채운 레몬나무 사이로 짙푸른 지중해가 눈부시게 빛납니다. 손끝에 밴 레몬 껍질의 향과 뜨거운 태양 — 그 여름 해안의 한낮을, 한 병에 담았습니다.',
-    poster:'', video:'',
+    poster:'amalfi.jpg', video:'',
     bgm:'JBGhG0M11_8',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -1035,7 +1048,7 @@ const perfumes = [
     keywords:['산토리니','그리스','greece','santorini','이아','oia','gr'],
     tagline:'하얀 벽이 노을에 물드는 시간',
     story:'이아 마을의 저녁. 새하얀 벽과 파란 지붕이 붉은 노을에 서서히 물들고, 에게해에서 불어온 바람에는 무화과와 바다 소금의 냄새가 실려 있습니다. 그 노을의 온도를, 한 병에 담았습니다.',
-    poster:'', video:'',
+    poster:'santorini.jpg', video:'',
     bgm:'JBGhG0M11_8',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -1456,23 +1469,58 @@ function playFilm(){
   const p = currentPerfume; if (!p || !p.video) return;
   const poster = document.getElementById('dPoster');
   const playBtn = document.getElementById('dPlay');
+  const load = document.getElementById('dLoading');
   if (bgmPlayer && typeof bgmPlayer.pauseVideo === 'function') bgmPlayer.pauseVideo();
-  dVideo.src = p.video;
-  dVideo.style.display = 'block';
-  poster.style.display = 'none';
+
+  // 포스터는 영상이 실제로 재생되기 전까지 유지 (모바일 검은 화면 방지)
   playBtn.style.display = 'none';
-  dVideo.play().catch(()=>{});
-  // 영상이 끝나면 다시 포스터로 복귀
-  dVideo.onended = ()=>{
+  load.style.display = 'flex';
+  dVideo.style.display = 'block';
+  dVideo.style.opacity = '0';
+
+  const restore = (msg)=>{
+    load.style.display = 'none';
     dVideo.style.display = 'none';
+    dVideo.style.opacity = '1';
     poster.style.display = p.poster ? 'block' : 'none';
     playBtn.style.display = 'flex';
+    if (msg) toast(msg);
   };
+
+  dVideo.onplaying = ()=>{                 // 실제 재생 시작 → 그때 포스터 감춤
+    load.style.display = 'none';
+    dVideo.style.opacity = '1';
+    poster.style.display = 'none';
+  };
+  dVideo.onerror = ()=> restore('영상을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.');
+  dVideo.onended = ()=> restore();
+
+  dVideo.src = p.video;
+  dVideo.load();
+  const tryPlay = dVideo.play();
+  if (tryPlay && tryPlay.catch){
+    tryPlay.catch(()=>{
+      // 모바일 자동재생 정책으로 막히면 음소거로 한 번 더 시도
+      dVideo.muted = true;
+      const retry = dVideo.play();
+      if (retry && retry.catch) retry.catch(()=> restore('탭하면 영상이 재생됩니다.'));
+    });
+  }
+  // 15초 안에 재생이 시작되지 않으면 복구 (모바일 네트워크 지연 대비)
+  clearTimeout(playTimer);
+  playTimer = setTimeout(()=>{
+    if (dVideo.paused || dVideo.readyState < 3) restore('네트워크가 느려 영상을 재생할 수 없어요.');
+  }, 15000);
 }
+let playTimer = null;
 
 function closeDetail(){
   detail.classList.remove('open');
-  dVideo.pause(); dVideo.removeAttribute('src'); dVideo.load(); dVideo.onended = null;
+  clearTimeout(playTimer);
+  dVideo.pause(); dVideo.removeAttribute('src'); dVideo.load();
+  dVideo.onended = null; dVideo.onerror = null; dVideo.onplaying = null;
+  dVideo.style.display = 'none'; dVideo.style.opacity = '1'; dVideo.muted = false;
+  const ld = document.getElementById('dLoading'); if (ld) ld.style.display = 'none';
   dVideo.style.display = 'none';
   const playBtn = document.getElementById('dPlay');
   if (playBtn) playBtn.style.display = 'none';
