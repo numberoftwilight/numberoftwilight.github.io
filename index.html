@@ -2,7 +2,8 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#07060c">
 <title>NUMBER OF TWILIGHT — Scent of the World</title>
 <meta name="description" content="23개 도시, 23개의 황혼. 여행에서 가져온 기억을 향으로 담은 니치 프래그런스 컬렉션.">
 <meta property="og:type" content="website">
@@ -645,37 +646,97 @@ body{
 
 /* ── 반응형 ───────────────────────────── */
 @media (max-width:920px){
-  .hud-top{padding:22px 20px;flex-wrap:wrap;gap:14px}
-  .brand h1{font-size:16px;letter-spacing:.3em}
-  .search-box{min-width:0;width:min(52vw,220px)}
-  .finder-btn{padding:11px 14px;letter-spacing:.1em}
+  /* ── 터치·안전영역 기본 ── */
+  body{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+  input,textarea{font-size:16px !important}   /* iOS 포커스 자동확대 방지 */
+
+  /* ── 헤더: 한 줄 컴팩트 + 아이콘 버튼 ── */
+  .hud-top{padding:calc(10px + env(safe-area-inset-top)) 12px 8px;flex-wrap:nowrap;align-items:center;gap:8px}
+  .brand{min-width:0;flex:1}
+  .brand h1{font-size:13px;letter-spacing:.24em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .brand p{font-size:8px;letter-spacing:.3em;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .brand .about-link{opacity:.7}
+  .hud-right{gap:6px;flex:none}
+  .finder-btn{padding:0;width:38px;height:38px;justify-content:center;border-radius:50%;font-size:14px;letter-spacing:0;text-indent:0}
   .finder-btn .fb-t{display:none}
   .passport-btn b{display:none}
+  .sound-toggle{width:38px;height:38px}
+  /* 검색: 아이콘만 → 탭하면 헤더 아래로 펼쳐짐 */
+  .search-box{min-width:0;width:38px;height:38px;padding:0;justify-content:center;border-radius:50%}
+  .search-box input{display:none}
+  .search-wrap.exp .search-box{position:fixed;left:12px;right:12px;top:calc(60px + env(safe-area-inset-top));width:auto;height:46px;
+    border-radius:40px;padding:0 16px;justify-content:flex-start;z-index:31;background:rgba(7,6,12,.94);border-color:var(--champagne)}
+  .search-wrap.exp .search-box input{display:block}
+  .search-wrap.exp .suggest{position:fixed;left:12px;right:12px;top:calc(114px + env(safe-area-inset-top));z-index:31}
+
+  /* ── 브레드크럼: 헤더 바로 아래 ── */
+  .breadcrumb{left:12px;top:calc(62px + env(safe-area-inset-top));bottom:auto}
+  .bc-home{padding:7px 13px;font-size:9px}
+  .bc-now{font-size:12px}
+
+  /* ── 지구본 마커 ── */
+  .marker-country .tag{font-size:10.5px;letter-spacing:.16em;padding:6px 11px;gap:6px}
+  .marker-country .tag i{display:none}
+  .marker-city .tag{font-size:12px;padding:6px 11px}
+  .flag{width:16px;height:12px}
+
+  /* ── 하단 컬렉션 바 ── */
+  .collection{padding:0 12px calc(12px + env(safe-area-inset-bottom))}
+  .hint{display:none}
+  .col-eyebrow-row{gap:12px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-bottom:10px}
+  .col-eyebrow-row::-webkit-scrollbar{display:none}
+  .col-eyebrow,.lookbook-link{font-size:9px;letter-spacing:.24em;white-space:nowrap;flex:none}
+  .lk-t{display:none}
+  .cards{gap:10px;padding-bottom:4px}
+  .card{min-width:138px;padding:11px 14px;gap:3px;border-radius:14px}
+  .card .no{font-size:8px}
+  .card .name{font-size:16px}
+  .card .sub{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
+
+  /* ── 오버레이: 모바일은 블러 제거(성능) ── */
+  #detail,#quiz,#draw,#passport,#about,#lookbook,#board{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(6,5,10,.97)}
+  .detail-close{top:calc(12px + env(safe-area-inset-top));right:12px;padding:9px 16px;font-size:9px}
+
+  /* ── 상세 ── */
+  .detail-inner{grid-template-columns:1fr;overflow-y:auto;gap:22px;
+    padding:calc(64px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom));align-content:start;justify-items:center}
+  .d-poster-frame{height:auto;width:min(84vw,340px);max-width:340px}
+  .d-info{overflow:visible;justify-content:flex-start;width:100%}
+  .d-title{font-size:34px}
+  .d-story{font-size:13.5px}
+  .profile-grid{grid-template-columns:1fr;gap:12px}
   .pairs{grid-template-columns:1fr}
+  .d-buy{gap:10px}
+  .d-buy .btn-buy{flex:1;text-align:center}
+  .d-play-ring{width:66px;height:66px}
+
+  /* ── 퀴즈/뽑기/여권/스토리/룩북/게시판 ── */
+  .quiz-inner,.pp-inner,.about-inner,.lb-inner,.bd-inner{padding-left:14px;padding-right:14px;width:100%}
+  .about-inner,.lb-inner,.bd-inner{padding-top:calc(60px + env(safe-area-inset-top))}
+  .q-title{font-size:20px;margin-bottom:24px}
+  .q-opt{padding:13px 16px}
+  .draw-card{height:min(40vh,320px)}
   .pp-grid{grid-template-columns:repeat(3,1fr);gap:10px}
+  .stamp .disc{width:64px;height:64px}
+  .about-title{font-size:34px}
+  .about-p{font-size:14px}
   .about-strip{grid-template-columns:repeat(5,1fr);gap:6px}
   .lb-grid{grid-template-columns:repeat(2,1fr);gap:12px}
   .bd-row2,.bd-row3{grid-template-columns:1fr}
+  .bd-form{padding:16px;gap:12px}
+  .post{padding:16px}
   .post.has-img{grid-template-columns:1fr}
-  .post .pimg{max-width:200px}
-  .bd-form{padding:18px}
-  .col-eyebrow-row{gap:10px;flex-wrap:wrap}
-  .brand .about-link{opacity:.7}
-  .stamp .disc{width:64px;height:64px}
-  .profile-grid{grid-template-columns:1fr;gap:12px}
-  .collection{padding:0 16px 18px}
-  .hint{display:none}
-  .breadcrumb{left:16px;top:auto;bottom:150px}
-  .cards{flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
-  .cards::-webkit-scrollbar{display:none}
-  .card{min-width:160px;flex:0 0 auto;padding:13px 17px}
-  .marker-country .tag{font-size:11px;letter-spacing:.18em;padding:7px 13px}
-  .marker-country .tag i{display:none}
-  .detail-inner{grid-template-columns:1fr;overflow-y:auto;gap:24px;
-    padding:70px 18px 50px;align-content:start;justify-items:center}
-  .d-poster-frame{height:auto;width:min(86vw,360px);max-width:360px}
-  .d-info{overflow:visible;justify-content:flex-start;width:100%}
-  .detail-close{top:18px;right:18px}
+  .post .pimg{max-width:180px}
+  .post .pcity{font-size:19px}
+
+  /* ── 토스트: 카드 바 위로 ── */
+  .toast{bottom:auto;top:calc(64px + env(safe-area-inset-top));max-width:calc(100vw - 24px);text-align:center;font-size:11px;padding:11px 20px}
+  .toast.show{transform:translate(-50%,0)}
+}
+@media (max-width:380px){
+  .brand p{display:none}
+  .hud-right{gap:4px}
+  .finder-btn,.sound-toggle,.search-box{width:34px;height:34px}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
@@ -730,7 +791,7 @@ body{
 
   <div class="collection">
     <div class="col-left">
-      <p class="col-eyebrow-row"><span class="col-eyebrow" id="colEyebrow">EXPLORE BY COUNTRY</span><button class="lookbook-link" onclick="openLookbook()">LOOKBOOK · 전체 보기 ▸</button><button class="lookbook-link" onclick="openBoard()">✎ MEMORY BOARD · 향 제안하기 ▸</button></p>
+      <p class="col-eyebrow-row"><span class="col-eyebrow" id="colEyebrow">EXPLORE BY COUNTRY</span><button class="lookbook-link" onclick="openLookbook()">LOOKBOOK<span class="lk-t"> · 전체 보기</span> ▸</button><button class="lookbook-link" onclick="openBoard()">✎ BOARD<span class="lk-t"> · 향 제안하기</span> ▸</button></p>
       <div class="cards" id="cards"></div>
     </div>
     <div class="hint">
@@ -1577,7 +1638,7 @@ try {
     .ringRepeatPeriod(2000);
 
   world.pointOfView({lat:30, lng:130, altitude: window.innerWidth < 920 ? 3.4 : 2.6});
-  world.renderer().setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75)); // 고해상도 화면 렉 방지
+  world.renderer().setPixelRatio(Math.min(window.devicePixelRatio || 1, window.innerWidth < 920 ? 1.5 : 1.75)); // 고해상도 화면 렉 방지
   world.controls().autoRotate = true;
   world.controls().autoRotateSpeed = 0.35;
   world.controls().enableDamping = true;
@@ -1667,7 +1728,7 @@ function renderSuggest(){
 function pickSuggest(id){
   const p = perfumes.find(x=>x.id===id);
   input.value = p.name;
-  suggest.classList.remove('open');
+  suggest.classList.remove('open'); searchWrap.classList.remove('exp'); input.blur();
   // 검색으로 바로 도시를 고르면, 해당 국가 단계로 맞춰둔 뒤 상세를 연다
   const c = countries.find(x=>x.id===p.country);
   if (c){ activeCountry = c; viewLevel = 'country'; updateBreadcrumb(); renderCards(); }
@@ -1681,8 +1742,14 @@ function handleKey(e){
   }
   if (e.key === 'Escape') suggest.classList.remove('open');
 }
+const searchWrap = document.querySelector('.search-wrap');
+document.querySelector('.search-box').addEventListener('click', ()=>{
+  if (window.innerWidth < 920 && !searchWrap.classList.contains('exp')){
+    searchWrap.classList.add('exp'); setTimeout(()=> input.focus(), 60);
+  }
+});
 document.addEventListener('click', (e)=>{
-  if (!e.target.closest('.search-wrap')) suggest.classList.remove('open');
+  if (!e.target.closest('.search-wrap')){ suggest.classList.remove('open'); searchWrap.classList.remove('exp'); }
 });
 
 /* ══════════ 비행 → 상세 오픈 ══════════ */
