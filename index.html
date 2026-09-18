@@ -21,6 +21,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/globe.gl@2.46.1/dist/globe.gl.min.js"></script>
 <script src="https://www.youtube.com/iframe_api"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
 <style>
 :root{
@@ -464,6 +465,64 @@ body{
 .about-contact a{text-decoration:none;display:inline-block}
 .about-foot{margin-top:50px;font-size:9px;letter-spacing:.44em;text-indent:.44em;color:var(--mist);opacity:.6}
 
+/* ── MEMORY BOARD ── */
+#board{position:fixed;inset:0;z-index:55;display:none;align-items:flex-start;justify-content:center;
+  background:rgba(6,5,10,.95);backdrop-filter:blur(12px);overflow-y:auto;scrollbar-width:none}
+#board::-webkit-scrollbar{display:none}
+#board.open{display:flex;animation:detailIn .5s cubic-bezier(.2,.8,.2,1)}
+.bd-inner{width:min(760px,94vw);padding:clamp(70px,10vh,110px) 0 80px;display:flex;flex-direction:column;align-items:center}
+.bd-sub{font-family:var(--font-serif-kr);font-weight:300;font-size:13.5px;line-height:1.9;color:var(--mist);
+  letter-spacing:.04em;text-align:center;margin:-16px 0 26px;word-break:keep-all}
+.bd-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:28px}
+.bd-form{width:100%;background:rgba(233,211,181,.03);border:1px solid var(--line);border-radius:20px;
+  padding:26px;display:flex;flex-direction:column;gap:14px;margin-bottom:34px;animation:fadeUp .4s ease}
+.bd-form label{display:flex;flex-direction:column;gap:7px;font-size:10px;letter-spacing:.3em;color:var(--mist);text-transform:uppercase}
+.bd-form label b{color:var(--ember);font-weight:500}
+.bd-form input,.bd-form textarea{
+  background:rgba(7,6,12,.6);border:1px solid var(--line);border-radius:12px;color:#eee;
+  font-family:var(--font-body);font-size:14px;letter-spacing:.02em;padding:12px 14px;outline:none;transition:.3s;
+  text-transform:none;resize:vertical;
+}
+.bd-form input:focus,.bd-form textarea:focus{border-color:var(--champagne);box-shadow:0 0 20px rgba(233,211,181,.12)}
+.bd-form input::placeholder,.bd-form textarea::placeholder{color:rgba(168,159,181,.45);letter-spacing:.02em}
+.bd-row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.bd-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.bd-form .nk{color:var(--ember);letter-spacing:.34em}
+.bd-file input[type=file]{display:none}
+.bd-file span{cursor:pointer;background:rgba(7,6,12,.6);border:1px dashed rgba(233,211,181,.3);border-radius:12px;
+  padding:12px 14px;font-size:12px;letter-spacing:.04em;text-transform:none;color:var(--champagne);text-align:center;transition:.3s}
+.bd-file span:hover{border-color:var(--champagne)}
+.bd-preview{display:none;justify-content:center}
+.bd-preview img{max-height:220px;border-radius:12px;border:1px solid var(--line)}
+.hp{position:absolute;left:-9999px;opacity:0;height:0;width:0}
+.bd-list{width:100%;display:flex;flex-direction:column;gap:16px}
+.bd-empty{font-family:var(--font-serif-kr);font-weight:300;color:var(--mist);letter-spacing:.08em;text-align:center;
+  padding:50px 20px;line-height:1.9;border:1px dashed rgba(233,211,181,.18);border-radius:18px;width:100%;word-break:keep-all}
+.post{background:rgba(233,211,181,.03);border:1px solid var(--line);border-radius:20px;padding:22px 24px;
+  display:grid;grid-template-columns:1fr;gap:14px;animation:fadeUp .5s ease}
+.post.has-img{grid-template-columns:120px 1fr}
+.post .pimg{aspect-ratio:3/4;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.post .pimg img{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in}
+.post .ptop{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.post .pcity{font-family:var(--font-display);font-size:22px;letter-spacing:.16em;color:var(--champagne)}
+.post .pcountry{font-size:10px;letter-spacing:.36em;color:var(--ember);margin-left:10px}
+.post .pmeta{font-size:10px;letter-spacing:.2em;color:var(--mist);opacity:.75}
+.post .pmoment{font-family:var(--font-serif-kr);font-weight:300;font-size:14px;color:#ddd6e4;letter-spacing:.06em}
+.post .pnotes{display:flex;flex-direction:column;gap:6px;margin:4px 0}
+.post .pnotes span{font-size:12.5px;color:#e6e0ea}
+.post .pnotes b{font-size:9px;letter-spacing:.32em;color:var(--ember);font-weight:500;margin-right:10px;display:inline-block;width:58px}
+.post .pstory{font-family:var(--font-serif-kr);font-weight:300;font-size:13.5px;line-height:1.9;color:#cfc8d6;
+  word-break:keep-all;white-space:pre-wrap}
+.post .pfoot{display:flex;justify-content:flex-end}
+.like{background:none;border:1px solid var(--line);color:var(--champagne);border-radius:30px;padding:8px 16px;
+  font-family:var(--font-body);font-size:11px;letter-spacing:.2em;cursor:pointer;transition:.3s}
+.like:hover,.like.on{border-color:var(--champagne);background:rgba(233,211,181,.08)}
+.like.on{color:var(--ember)}
+.bd-more{margin-top:24px}
+.bd-setup{width:100%;border:1px solid var(--line);border-radius:18px;padding:30px;text-align:center;
+  font-family:var(--font-serif-kr);font-weight:300;color:var(--mist);line-height:1.9;letter-spacing:.06em;word-break:keep-all}
+.bd-setup b{color:var(--champagne);font-weight:400}
+
 /* ── 룩북 ── */
 .col-eyebrow-row{display:flex;align-items:center;gap:16px;margin-bottom:14px}
 .col-eyebrow-row .col-eyebrow{margin:0}
@@ -596,6 +655,10 @@ body{
   .pp-grid{grid-template-columns:repeat(3,1fr);gap:10px}
   .about-strip{grid-template-columns:repeat(5,1fr);gap:6px}
   .lb-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .bd-row2,.bd-row3{grid-template-columns:1fr}
+  .post.has-img{grid-template-columns:1fr}
+  .post .pimg{max-width:200px}
+  .bd-form{padding:18px}
   .col-eyebrow-row{gap:10px;flex-wrap:wrap}
   .brand .about-link{opacity:.7}
   .stamp .disc{width:64px;height:64px}
@@ -667,12 +730,53 @@ body{
 
   <div class="collection">
     <div class="col-left">
-      <p class="col-eyebrow-row"><span class="col-eyebrow" id="colEyebrow">EXPLORE BY COUNTRY</span><button class="lookbook-link" onclick="openLookbook()">LOOKBOOK · 전체 보기 ▸</button></p>
+      <p class="col-eyebrow-row"><span class="col-eyebrow" id="colEyebrow">EXPLORE BY COUNTRY</span><button class="lookbook-link" onclick="openLookbook()">LOOKBOOK · 전체 보기 ▸</button><button class="lookbook-link" onclick="openBoard()">✎ MEMORY BOARD · 향 제안하기 ▸</button></p>
       <div class="cards" id="cards"></div>
     </div>
     <div class="hint">
       DRAG TO EXPLORE<br>CLICK A COUNTRY TO ENTER
     </div>
+  </div>
+</div>
+
+<!-- ────── MEMORY BOARD (제안 게시판) ────── -->
+<div id="board" role="dialog" aria-modal="true">
+  <button class="detail-close" onclick="closeBoard()">CLOSE ✕</button>
+  <div class="bd-inner">
+    <p class="q-eyebrow">MEMORY BOARD</p>
+    <h3 class="q-title">당신의 황혼을 제안해 주세요</h3>
+    <p class="bd-sub">향으로 남기고 싶은 도시가 있나요? 그 도시의 순간과, 떠오르는 향의 노트를 적어주세요.<br>가장 많은 공감을 받은 제안은 다음 MEMORY 번호가 됩니다.</p>
+    <div class="bd-actions">
+      <button class="btn-buy" onclick="showWrite()">✎ 제안 남기기</button>
+      <button class="btn-ghost" id="bdSortBtn" onclick="toggleSort()">최신순</button>
+    </div>
+
+    <form class="bd-form" id="bdForm" onsubmit="submitProposal(event)" style="display:none">
+      <div class="bd-row2">
+        <label>도시 <b>*</b><input name="city" maxlength="40" required placeholder="예: 리스본"></label>
+        <label>나라 <b>*</b><input name="country" maxlength="40" required placeholder="예: 포르투갈"></label>
+      </div>
+      <label>그 도시가 떠오르는 순간<input name="moment" maxlength="80" placeholder="예: 트램이 지나가는 언덕길의 저녁"></label>
+      <div class="bd-row3">
+        <label><span class="nk">TOP</span><input name="top" maxlength="60" placeholder="첫 향 — 도착의 순간"></label>
+        <label><span class="nk">MIDDLE</span><input name="middle" maxlength="60" placeholder="중간 향 — 걷던 시간"></label>
+        <label><span class="nk">BASE</span><input name="base" maxlength="60" placeholder="잔향 — 남은 기억"></label>
+      </div>
+      <label>사연<textarea name="story" maxlength="1500" rows="4" placeholder="그곳에서의 기억을 들려주세요"></textarea></label>
+      <div class="bd-row2">
+        <label>닉네임<input name="nickname" maxlength="20" placeholder="익명"></label>
+        <label class="bd-file">사진 (선택)<input type="file" name="image" accept="image/*" onchange="previewImg(this)"><span id="bdFileName">이미지 선택 · 최대 1장</span></label>
+      </div>
+      <div class="bd-preview" id="bdPreview"></div>
+      <input name="website" class="hp" tabindex="-1" autocomplete="off">
+      <div class="bd-actions">
+        <button class="btn-buy" type="submit" id="bdSubmit">제안 보내기</button>
+        <button class="btn-ghost" type="button" onclick="hideWrite()">취소</button>
+      </div>
+    </form>
+
+    <div class="bd-list" id="bdList"></div>
+    <div class="bd-more"><button class="btn-ghost" id="bdMore" onclick="loadProposals(false)" style="display:none">더 보기</button></div>
   </div>
 </div>
 
@@ -715,6 +819,7 @@ body{
       <div class="about-contact">
         <a href="https://instagram.com/hu_nii2" target="_blank" rel="noopener" class="btn-ghost">INSTAGRAM</a>
         <button class="btn-ghost" onclick="closeAbout(); openLookbook()">LOOKBOOK</button>
+        <button class="btn-ghost" onclick="closeAbout(); openBoard()">MEMORY BOARD</button>
         <button class="btn-buy" onclick="closeAbout(); openDraw()">오늘의 향 뽑기</button>
       </div>
     </div>
@@ -1761,7 +1866,7 @@ detail.addEventListener('click', e=>{ if (e.target === detail) closeDetail(); })
 document.addEventListener('keydown', e=>{
   if (e.key === 'Escape' && detail.classList.contains('open')) closeDetail();
   if (e.key === 'Escape' && document.getElementById('quiz').classList.contains('open')) closeQuiz();
-  if (e.key === 'Escape'){ closeDraw(); closePassport(); closeAbout(); closeLookbook(); }
+  if (e.key === 'Escape'){ closeDraw(); closePassport(); closeAbout(); closeLookbook(); closeBoard(); }
 });
 
 function addToCart(){
@@ -1891,11 +1996,136 @@ function renderQuizResult(){
   document.getElementById('qDots').innerHTML = '';
 }
 function goToScent(id){
-  closeQuiz(); closeDraw(); closePassport(); closeAbout(); closeLookbook();
+  closeQuiz(); closeDraw(); closePassport(); closeAbout(); closeLookbook(); closeBoard();
   const p = perfumes.find(x=>x.id===id); if (!p) return;
   const c = countries.find(x=>x.id===p.country);
   if (c){ activeCountry = c; viewLevel = 'country'; updateBreadcrumb(); renderCards(); }
   flyAndOpen(p);
+}
+
+/* ══════════ MEMORY BOARD (제안 게시판 · Supabase) ══════════
+   설정: 아래 BOARD_CFG에 Supabase 프로젝트 URL과 anon public key를 넣으면 게시판이 켜집니다.
+   (anon key는 공개용 키라 코드에 넣어도 됩니다. 쓰기/읽기 범위는 Supabase RLS 정책이 제한합니다.) */
+const BOARD_CFG = { url:'', anonKey:'' };
+let sb = null, bdPage = 0, bdSort = 'new', bdDone = false, bdBusy = false;
+const BD_PAGE = 10;
+function boardReady(){
+  if (sb) return true;
+  if (!BOARD_CFG.url || !BOARD_CFG.anonKey || !window.supabase) return false;
+  sb = window.supabase.createClient(BOARD_CFG.url, BOARD_CFG.anonKey);
+  return true;
+}
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const boardEl = document.getElementById('board');
+function openBoard(){
+  boardEl.classList.add('open'); boardEl.scrollTop = 0; hideWrite();
+  if (!boardReady()){
+    document.getElementById('bdList').innerHTML =
+      `<div class="bd-setup"><b>게시판 준비중입니다 ✦</b><br>곧 여러분의 황혼을 제안할 수 있어요.</div>`;
+    document.getElementById('bdMore').style.display = 'none';
+    return;
+  }
+  loadProposals(true);
+}
+function closeBoard(){ boardEl.classList.remove('open'); }
+boardEl.addEventListener('click', e=>{ if (e.target === boardEl) closeBoard(); });
+function showWrite(){ if (!boardReady()){ toast('게시판이 아직 준비중이에요 ✦'); return; }
+  document.getElementById('bdForm').style.display='flex'; document.getElementById('bdForm').scrollIntoView({behavior:'smooth',block:'start'}); }
+function hideWrite(){ const f=document.getElementById('bdForm'); f.style.display='none'; f.reset();
+  document.getElementById('bdPreview').style.display='none'; document.getElementById('bdPreview').innerHTML='';
+  document.getElementById('bdFileName').textContent='이미지 선택 · 최대 1장'; }
+function toggleSort(){ bdSort = bdSort==='new' ? 'hot' : 'new';
+  document.getElementById('bdSortBtn').textContent = bdSort==='new' ? '최신순' : '공감순'; loadProposals(true); }
+
+async function loadProposals(reset){
+  if (!boardReady() || bdBusy) return; bdBusy = true;
+  const list = document.getElementById('bdList');
+  if (reset){ bdPage = 0; bdDone = false; list.innerHTML = '<div class="bd-empty">불러오는 중 ✦</div>'; }
+  const from = bdPage*BD_PAGE, to = from + BD_PAGE - 1;
+  let q = sb.from('proposals').select('*').eq('hidden', false);
+  q = bdSort==='hot' ? q.order('likes',{ascending:false}).order('created_at',{ascending:false}) : q.order('created_at',{ascending:false});
+  const { data, error } = await q.range(from, to);
+  bdBusy = false;
+  if (error){ list.innerHTML = `<div class="bd-empty">게시판을 불러오지 못했어요.<br>잠시 후 다시 시도해 주세요.</div>`; return; }
+  if (reset) list.innerHTML = '';
+  if (!data.length && bdPage===0){ list.innerHTML = `<div class="bd-empty">아직 제안이 없어요.<br>첫 번째 황혼을 남겨주세요 ✦</div>`; }
+  data.forEach(p => list.insertAdjacentHTML('beforeend', renderPost(p)));
+  bdPage++; if (data.length < BD_PAGE) bdDone = true;
+  document.getElementById('bdMore').style.display = bdDone ? 'none' : 'inline-block';
+}
+function renderPost(p){
+  const liked = likedSet().has(p.id);
+  const d = new Date(p.created_at); const date = `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+  const notes = [['TOP',p.top_note],['MIDDLE',p.middle_note],['BASE',p.base_note]].filter(n=>n[1]);
+  return `<article class="post ${p.image_url?'has-img':''}" id="post-${p.id}">
+    ${p.image_url ? `<div class="pimg"><img src="${esc(p.image_url)}" alt="" loading="lazy" onclick="window.open(this.src,'_blank')"></div>` : ''}
+    <div>
+      <div class="ptop"><span><span class="pcity">${esc(p.city).toUpperCase()}</span><span class="pcountry">${esc(p.country).toUpperCase()}</span></span>
+        <span class="pmeta">${esc(p.nickname||'익명')} · ${date}</span></div>
+      ${p.moment ? `<p class="pmoment">"${esc(p.moment)}"</p>` : ''}
+      ${notes.length ? `<div class="pnotes">${notes.map(n=>`<span><b>${n[0]}</b>${esc(n[1])}</span>`).join('')}</div>` : ''}
+      ${p.story ? `<p class="pstory">${esc(p.story)}</p>` : ''}
+      <div class="pfoot"><button class="like ${liked?'on':''}" onclick="likePost(${p.id}, this)">♥ 공감 <span>${p.likes||0}</span></button></div>
+    </div>
+  </article>`;
+}
+function likedSet(){ try{ return new Set(JSON.parse(localStorage.getItem('not_liked')||'[]')); }catch(e){ return new Set(); } }
+async function likePost(id, btn){
+  if (!boardReady()) return;
+  const set = likedSet(); if (set.has(id)){ toast('이미 공감한 제안이에요'); return; }
+  const { error } = await sb.rpc('like_proposal', { pid: id });
+  if (error){ toast('잠시 후 다시 시도해 주세요'); return; }
+  set.add(id); try{ localStorage.setItem('not_liked', JSON.stringify([...set])); }catch(e){}
+  btn.classList.add('on'); const n = btn.querySelector('span'); n.textContent = (parseInt(n.textContent)||0)+1;
+}
+function previewImg(inp){
+  const f = inp.files && inp.files[0]; const pv = document.getElementById('bdPreview');
+  document.getElementById('bdFileName').textContent = f ? f.name : '이미지 선택 · 최대 1장';
+  if (!f){ pv.style.display='none'; pv.innerHTML=''; return; }
+  const r = new FileReader(); r.onload = e => { pv.innerHTML = `<img src="${e.target.result}" alt="">`; pv.style.display='flex'; }; r.readAsDataURL(f);
+}
+// 업로드 전 브라우저에서 리사이즈 (최대 1600px, JPEG) → 용량·스팸 방어
+function compressImage(file){
+  return new Promise((res, rej)=>{
+    const img = new Image(); const url = URL.createObjectURL(file);
+    img.onload = ()=>{
+      const max = 1600, r = Math.min(1, max/Math.max(img.width, img.height));
+      const c = document.createElement('canvas'); c.width = Math.round(img.width*r); c.height = Math.round(img.height*r);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      c.toBlob(b => { URL.revokeObjectURL(url); b ? res(b) : rej(new Error('compress')); }, 'image/jpeg', .85);
+    };
+    img.onerror = ()=>{ URL.revokeObjectURL(url); rej(new Error('img')); };
+    img.src = url;
+  });
+}
+async function submitProposal(ev){
+  ev.preventDefault();
+  if (!boardReady()) return;
+  const f = ev.target, fd = new FormData(f);
+  if (fd.get('website')) return;                                   // 허니팟(봇)
+  const last = parseInt(localStorage.getItem('not_lastpost')||'0');
+  if (Date.now() - last < 60000){ toast('제안은 1분에 한 번만 남길 수 있어요'); return; }
+  const btn = document.getElementById('bdSubmit'); btn.disabled = true; btn.textContent = '보내는 중 ✦';
+  try{
+    let image_url = null; const file = fd.get('image');
+    if (file && file.size){
+      if (file.size > 12*1024*1024) throw new Error('이미지는 12MB 이하로 올려주세요');
+      const blob = await compressImage(file);
+      const path = `${Date.now()}_${Math.random().toString(36).slice(2,8)}.jpg`;
+      const { error: upErr } = await sb.storage.from('proposals').upload(path, blob, { contentType:'image/jpeg' });
+      if (upErr) throw upErr;
+      image_url = sb.storage.from('proposals').getPublicUrl(path).data.publicUrl;
+    }
+    const row = { city:fd.get('city').trim(), country:fd.get('country').trim(), moment:fd.get('moment').trim()||null,
+      top_note:fd.get('top').trim()||null, middle_note:fd.get('middle').trim()||null, base_note:fd.get('base').trim()||null,
+      story:fd.get('story').trim()||null, nickname:fd.get('nickname').trim()||null, image_url };
+    const { error } = await sb.from('proposals').insert(row);
+    if (error) throw error;
+    localStorage.setItem('not_lastpost', String(Date.now()));
+    toast(`✦ ${row.city.toUpperCase()} 제안이 등록되었어요`);
+    hideWrite(); loadProposals(true);
+  }catch(e){ toast(e.message && e.message.length < 60 ? e.message : '등록에 실패했어요. 잠시 후 다시 시도해 주세요'); }
+  finally{ btn.disabled = false; btn.textContent = '제안 보내기'; }
 }
 
 /* ══════════ 브랜드 스토리 / 룩북 ══════════ */
