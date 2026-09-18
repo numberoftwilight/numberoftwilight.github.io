@@ -4,7 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NUMBER OF TWILIGHT — Scent of the World</title>
-<meta name="description" content="전 세계 도시의 기억을 담은 향수. 여행의 순간을 향으로 다시 만나다.">
+<meta name="description" content="23개 도시, 23개의 황혼. 여행에서 가져온 기억을 향으로 담은 니치 프래그런스 컬렉션.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NUMBER OF TWILIGHT">
+<meta property="og:title" content="NUMBER OF TWILIGHT — Scent of the World">
+<meta property="og:description" content="23개 도시, 23개의 황혼. 여행에서 가져온 기억을 향으로.">
+<meta property="og:image" content="https://numberoftwilight.github.io/kanazawa.png">
+<meta property="og:url" content="https://numberoftwilight.github.io/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2307060c'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle' fill='%23e9d3b5'%3E%E2%9C%A6%3C/text%3E%3C/svg%3E">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -423,6 +431,56 @@ body{
 
 /* ── 향 여권 ── */
 .pp-inner{width:min(760px,94vw)}
+
+/* ── 브랜드 스토리 ── */
+.brand{cursor:pointer}
+.about-link{opacity:0;transition:.4s;color:var(--champagne)}
+.brand:hover .about-link{opacity:.9}
+#about,#lookbook{position:fixed;inset:0;z-index:55;display:none;align-items:flex-start;justify-content:center;
+  background:rgba(6,5,10,.95);backdrop-filter:blur(12px);overflow-y:auto;scrollbar-width:none}
+#about::-webkit-scrollbar,#lookbook::-webkit-scrollbar{display:none}
+#about.open,#lookbook.open{display:flex;animation:detailIn .5s cubic-bezier(.2,.8,.2,1)}
+.about-inner{width:min(640px,92vw);padding:clamp(70px,12vh,120px) 0 80px;text-align:center}
+.about-title{font-family:var(--font-display);font-weight:400;font-size:clamp(40px,7vw,72px);letter-spacing:.22em;
+  color:var(--champagne);line-height:1.1;margin-bottom:34px;padding-left:.22em}
+.about-lead{font-family:var(--font-serif-kr);font-weight:300;font-size:clamp(16px,2vw,20px);line-height:1.9;
+  color:#ddd6e4;letter-spacing:.04em}
+.about-divider{margin:44px auto;display:flex;align-items:center;justify-content:center;gap:16px;width:min(320px,70%)}
+.about-divider::before,.about-divider::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--champagne-dim))}
+.about-divider::after{background:linear-gradient(90deg,var(--champagne-dim),transparent)}
+.about-divider span{color:var(--champagne);font-size:13px}
+.about-sec{text-align:left;margin:0 auto 38px;max-width:560px}
+.about-k{font-size:10px;letter-spacing:.5em;text-indent:.5em;color:var(--ember);margin-bottom:14px;text-align:center}
+.about-p{font-family:var(--font-serif-kr);font-weight:300;font-size:14.5px;line-height:2.05;color:#cfc8d6;
+  letter-spacing:.02em;word-break:keep-all;margin-bottom:14px}
+.about-p em{font-style:normal;color:var(--champagne)}
+.about-p b{font-family:var(--font-display);font-weight:400;letter-spacing:.28em;color:var(--champagne);font-size:15px}
+.about-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:10px auto 44px;max-width:560px}
+.about-strip img{width:100%;aspect-ratio:1024/1536;object-fit:cover;border-radius:8px;border:1px solid var(--line);
+  transition:.4s;cursor:pointer;display:block}
+.about-strip img:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(0,0,0,.6);border-color:var(--champagne)}
+.about-maker{text-align:center}
+.about-contact{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+.about-contact a{text-decoration:none;display:inline-block}
+.about-foot{margin-top:50px;font-size:9px;letter-spacing:.44em;text-indent:.44em;color:var(--mist);opacity:.6}
+
+/* ── 룩북 ── */
+.col-eyebrow-row{display:flex;align-items:center;gap:16px;margin-bottom:14px}
+.col-eyebrow-row .col-eyebrow{margin:0}
+.lookbook-link{background:none;border:none;color:var(--champagne);font-family:var(--font-body);font-size:10px;
+  letter-spacing:.3em;cursor:pointer;opacity:.75;transition:.3s;padding:0}
+.lookbook-link:hover{opacity:1;text-shadow:0 0 12px rgba(233,211,181,.5)}
+.lb-inner{width:min(1100px,94vw);padding:clamp(70px,10vh,110px) 0 70px;display:flex;flex-direction:column;align-items:center}
+.lb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px;width:100%;margin-top:10px}
+.lb-item{background:none;border:none;padding:0;cursor:pointer;text-align:center;font-family:var(--font-body)}
+.lb-item .fr{aspect-ratio:1024/1536;border-radius:10px;overflow:hidden;border:1px solid var(--line);
+  background:linear-gradient(160deg,#100a18,#080610);display:flex;align-items:center;justify-content:center;
+  transition:.4s;position:relative}
+.lb-item:hover .fr{transform:translateY(-6px);box-shadow:0 20px 44px rgba(0,0,0,.65);border-color:var(--champagne)}
+.lb-item .fr img{width:100%;height:100%;object-fit:cover;display:block}
+.lb-item .fr em{font-style:normal;color:var(--champagne);opacity:.6;font-size:22px}
+.lb-item .no{display:block;margin-top:9px;font-size:9px;letter-spacing:.34em;color:var(--ember)}
+.lb-item .nm{display:block;margin-top:3px;font-family:var(--font-serif);font-style:italic;font-size:13px;letter-spacing:.1em;color:var(--champagne)}
 .pp-sub{font-family:var(--font-serif-kr);font-weight:300;font-size:13px;color:var(--mist);letter-spacing:.1em;margin:-18px 0 16px}
 .pp-bar{width:min(360px,80%);height:1px;background:rgba(233,211,181,.15);margin-bottom:28px;position:relative}
 .pp-fill{position:absolute;left:0;top:-1px;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--ember),var(--champagne));
@@ -536,6 +594,10 @@ body{
   .passport-btn b{display:none}
   .pairs{grid-template-columns:1fr}
   .pp-grid{grid-template-columns:repeat(3,1fr);gap:10px}
+  .about-strip{grid-template-columns:repeat(5,1fr);gap:6px}
+  .lb-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .col-eyebrow-row{gap:10px;flex-wrap:wrap}
+  .brand .about-link{opacity:.7}
   .stamp .disc{width:64px;height:64px}
   .profile-grid{grid-template-columns:1fr;gap:12px}
   .collection{padding:0 16px 18px}
@@ -567,7 +629,7 @@ body{
 <div id="intro">
   <div class="intro-title" id="introTitle">NUMBER OF TWILIGHT</div>
   <div class="intro-line"></div>
-  <p class="intro-sub">scent of the world · 여행의 기억을 향으로</p>
+  <p class="intro-sub">23개의 도시 · 23개의 황혼<br>여행에서 가져온 기억을 향으로</p>
   <button class="intro-enter" onclick="enterSite()">ENTER THE WORLD</button>
 </div>
 
@@ -576,9 +638,9 @@ body{
   <div id="globeViz"></div>
 
   <header class="hud-top">
-    <div class="brand">
+    <div class="brand" onclick="openAbout()" title="Brand Story">
       <h1>NUMBER OF TWILIGHT</h1>
-      <p>SCENT OF THE WORLD GAZE</p>
+      <p>SCENT OF THE WORLD GAZE <span class="about-link">· BRAND STORY ✦</span></p>
     </div>
     <div class="hud-right">
       <button class="finder-btn" onclick="openQuiz()">✦ <span class="fb-t">SCENT FINDER</span></button>
@@ -605,12 +667,68 @@ body{
 
   <div class="collection">
     <div class="col-left">
-      <p class="col-eyebrow" id="colEyebrow">EXPLORE BY COUNTRY</p>
+      <p class="col-eyebrow-row"><span class="col-eyebrow" id="colEyebrow">EXPLORE BY COUNTRY</span><button class="lookbook-link" onclick="openLookbook()">LOOKBOOK · 전체 보기 ▸</button></p>
       <div class="cards" id="cards"></div>
     </div>
     <div class="hint">
       DRAG TO EXPLORE<br>CLICK A COUNTRY TO ENTER
     </div>
+  </div>
+</div>
+
+<!-- ────── BRAND STORY ────── -->
+<div id="about" role="dialog" aria-modal="true">
+  <button class="detail-close" onclick="closeAbout()">CLOSE ✕</button>
+  <div class="about-inner">
+    <p class="q-eyebrow">BRAND STORY</p>
+    <h2 class="about-title">NUMBER OF<br>TWILIGHT</h2>
+    <p class="about-lead">여행에서 돌아온 며칠 뒤,<br>가장 먼저 흐려지는 건 사진이 아니라 냄새였습니다.</p>
+
+    <div class="about-divider"><span>✦</span></div>
+
+    <div class="about-sec">
+      <p class="about-k">시작</p>
+      <p class="about-p">여행을 만드는 일을 하며 여러 도시를 오가는 동안, 저는 늘 같은 순간에 걸음을 멈췄습니다. 해가 지고 도시의 불이 하나씩 켜지는 시간. 가나자와의 젖은 골목, 지우펀의 홍등, 푸꾸옥의 밤바다 — 그 황혼마다 공기의 냄새가 달랐습니다.</p>
+      <p class="about-p">사진은 남지만 냄새는 남지 않았습니다. 그래서 그 공기를 병에 담아보기로 했습니다. 한 도시, 한 황혼, 한 병. 이 컬렉션은 그렇게 시작되었습니다.</p>
+    </div>
+
+    <div class="about-sec">
+      <p class="about-k">이름</p>
+      <p class="about-p">NUMBER OF TWILIGHT — <em>황혼의 번호</em>. 세상의 모든 황혼은 같지 않습니다. 저는 제가 서 있었던 황혼 하나하나에 번호를 붙였습니다. MEMORY 01은 가나자와의 봄바람, MEMORY 23은 레이캬비크의 오로라. 번호는 순서가 아니라, 그날 그 도시에 있었다는 기록입니다.</p>
+    </div>
+
+    <div class="about-sec">
+      <p class="about-k">방식</p>
+      <p class="about-p">실제로 걸었던 도시만 담습니다. 그 도시를 떠올리게 하는 단 하나의 장면을 고르고 — 벚꽃, 홍등, 불꽃, 비눗방울, 얼음, 오로라 — 그 장면의 공기를 탑·미들·베이스 노트로 다시 짓습니다. 첫 향은 그곳에 도착한 순간, 중간 향은 그곳을 걷던 시간, 잔향은 돌아온 뒤에도 옷깃에 남은 기억입니다.</p>
+    </div>
+
+    <div class="about-sec">
+      <p class="about-k">믿음</p>
+      <p class="about-p">향은 기억을 여는 가장 빠른 열쇠입니다. 손목에 한 번 뿌리는 것만으로, 당신은 다시 그 골목에 서 있게 됩니다. 이 브랜드는 향수를 파는 것이 아니라, 돌아갈 수 있는 장소를 파는 것이라고 믿습니다.</p>
+    </div>
+
+    <div class="about-strip" id="aboutStrip"></div>
+
+    <div class="about-sec about-maker">
+      <p class="about-k">만드는 사람</p>
+      <p class="about-p"><b>SIRO</b> — 여행을 업으로 하며, 여행에서 가져온 기억을 향으로 옮기는 사람. 23개 도시의 황혼을 직접 걸었고, 지금도 다음 번호를 찾아 떠납니다.</p>
+      <div class="about-contact">
+        <a href="https://instagram.com/hu_nii2" target="_blank" rel="noopener" class="btn-ghost">INSTAGRAM</a>
+        <button class="btn-ghost" onclick="closeAbout(); openLookbook()">LOOKBOOK</button>
+        <button class="btn-buy" onclick="closeAbout(); openDraw()">오늘의 향 뽑기</button>
+      </div>
+    </div>
+    <p class="about-foot">SCENT OF THE WORLD GAZE · 2026</p>
+  </div>
+</div>
+
+<!-- ────── LOOKBOOK ────── -->
+<div id="lookbook" role="dialog" aria-modal="true">
+  <button class="detail-close" onclick="closeLookbook()">CLOSE ✕</button>
+  <div class="lb-inner">
+    <p class="q-eyebrow">MEMORY SERIES · LOOKBOOK</p>
+    <h3 class="q-title">스물세 개의 황혼</h3>
+    <div class="lb-grid" id="lbGrid"></div>
   </div>
 </div>
 
@@ -1643,7 +1761,7 @@ detail.addEventListener('click', e=>{ if (e.target === detail) closeDetail(); })
 document.addEventListener('keydown', e=>{
   if (e.key === 'Escape' && detail.classList.contains('open')) closeDetail();
   if (e.key === 'Escape' && document.getElementById('quiz').classList.contains('open')) closeQuiz();
-  if (e.key === 'Escape'){ closeDraw(); closePassport(); }
+  if (e.key === 'Escape'){ closeDraw(); closePassport(); closeAbout(); closeLookbook(); }
 });
 
 function addToCart(){
@@ -1773,12 +1891,35 @@ function renderQuizResult(){
   document.getElementById('qDots').innerHTML = '';
 }
 function goToScent(id){
-  closeQuiz(); closeDraw(); closePassport();
+  closeQuiz(); closeDraw(); closePassport(); closeAbout(); closeLookbook();
   const p = perfumes.find(x=>x.id===id); if (!p) return;
   const c = countries.find(x=>x.id===p.country);
   if (c){ activeCountry = c; viewLevel = 'country'; updateBreadcrumb(); renderCards(); }
   flyAndOpen(p);
 }
+
+/* ══════════ 브랜드 스토리 / 룩북 ══════════ */
+const aboutEl = document.getElementById('about');
+function openAbout(){
+  // 스토리 중간에 포스터 5장 스트립 (컬렉션 톤 미리보기)
+  const pick = ['kanazawa','jiufen','phuquoc','harbin','santorini'].map(id=>perfumes.find(p=>p.id===id)).filter(p=>p&&p.poster);
+  document.getElementById('aboutStrip').innerHTML = pick.map(p=>`<img src="${p.poster}" alt="${p.name}" loading="lazy" onclick="closeAbout(); goToScent('${p.id}')">`).join('');
+  aboutEl.classList.add('open'); aboutEl.scrollTop = 0;
+}
+function closeAbout(){ aboutEl.classList.remove('open'); }
+aboutEl.addEventListener('click', e=>{ if (e.target === aboutEl) closeAbout(); });
+
+const lbEl = document.getElementById('lookbook');
+function openLookbook(){
+  document.getElementById('lbGrid').innerHTML = perfumes.map(p=>`
+    <button class="lb-item" onclick="closeLookbook(); goToScent('${p.id}')">
+      <span class="fr">${p.poster?`<img src="${p.poster}" alt="${p.name}" loading="lazy">`:'<em>✦</em>'}</span>
+      <span class="no">${p.no}</span><span class="nm">${p.name}</span>
+    </button>`).join('');
+  lbEl.classList.add('open'); lbEl.scrollTop = 0;
+}
+function closeLookbook(){ lbEl.classList.remove('open'); }
+lbEl.addEventListener('click', e=>{ if (e.target === lbEl) closeLookbook(); });
 
 /* ══════════ 오늘의 향 뽑기 (MEMORY DRAW) ══════════ */
 const drawEl = document.getElementById('draw');
