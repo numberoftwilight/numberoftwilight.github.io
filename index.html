@@ -653,9 +653,8 @@ body{
   /* ── 헤더: 한 줄 컴팩트 + 아이콘 버튼 ── */
   .hud-top{padding:calc(10px + env(safe-area-inset-top)) 12px 8px;flex-wrap:nowrap;align-items:center;gap:8px}
   .brand{min-width:0;flex:1}
-  .brand h1{font-size:13px;letter-spacing:.24em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .brand p{font-size:8px;letter-spacing:.3em;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .brand .about-link{opacity:.7}
+  .brand h1{font-size:12px;letter-spacing:.22em;line-height:1.25;white-space:normal;max-width:150px}
+  .brand p{display:none}
   .hud-right{gap:6px;flex:none}
   .finder-btn{padding:0;width:38px;height:38px;justify-content:center;border-radius:50%;font-size:14px;letter-spacing:0;text-indent:0}
   .finder-btn .fb-t{display:none}
@@ -675,7 +674,9 @@ body{
   .bc-now{font-size:12px}
 
   /* ── 지구본 마커 ── */
-  .marker-country .tag{font-size:10.5px;letter-spacing:.16em;padding:6px 11px;gap:6px}
+  .marker-country .ring{width:12px;height:12px}
+  .marker-country .tag{font-size:0;letter-spacing:0;text-indent:0;padding:5px 6px;gap:0;border-radius:14px;margin-top:6px}
+  .marker-country .tag .flag{width:24px;height:17px;border-radius:3px}
   .marker-country .tag i{display:none}
   .marker-city .tag{font-size:12px;padding:6px 11px}
   .flag{width:16px;height:12px}
