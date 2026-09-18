@@ -400,6 +400,67 @@ body{
   backdrop-filter:blur(12px);transition:.35s;white-space:nowrap;
 }
 .finder-btn:hover{border-color:var(--champagne);box-shadow:0 0 28px rgba(233,211,181,.18)}
+.passport-btn b{font-weight:600;color:var(--ember);letter-spacing:.1em;margin-left:2px}
+
+/* ── 오늘의 향 뽑기 ── */
+#draw,#passport{position:fixed;inset:0;z-index:55;display:none;align-items:center;justify-content:center;
+  background:rgba(6,5,10,.93);backdrop-filter:blur(12px)}
+#draw.open,#passport.open{display:flex;animation:detailIn .5s cubic-bezier(.2,.8,.2,1)}
+.draw-card{
+  height:min(46vh,380px);aspect-ratio:1024/1536;border-radius:16px;overflow:hidden;
+  border:1px solid var(--line);box-shadow:0 30px 70px rgba(0,0,0,.65);margin:6px 0 26px;
+  background:radial-gradient(60% 55% at 50% 42%, rgba(96,52,90,.22), transparent 70%), linear-gradient(160deg,#100a18,#080610);
+  position:relative;transition:transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .5s;
+}
+.draw-card.settle{transform:scale(1.04);box-shadow:0 30px 80px rgba(0,0,0,.7),0 0 60px rgba(233,211,181,.25)}
+.draw-face{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.draw-face span{font-size:34px;color:var(--champagne);opacity:.8;animation:soonPulse 2.4s ease-in-out infinite}
+.draw-face img{width:100%;height:100%;object-fit:cover;display:block}
+.draw-face.flash img{animation:drawFlash .12s linear}
+@keyframes drawFlash{from{filter:brightness(1.6)}to{filter:brightness(1)}}
+.draw-meta{display:flex;flex-direction:column;align-items:center;animation:fadeUp .6s ease}
+.draw-meta .no{font-size:10px;letter-spacing:.44em;text-indent:.44em;color:var(--ember);margin-bottom:10px}
+
+/* ── 향 여권 ── */
+.pp-inner{width:min(760px,94vw)}
+.pp-sub{font-family:var(--font-serif-kr);font-weight:300;font-size:13px;color:var(--mist);letter-spacing:.1em;margin:-18px 0 16px}
+.pp-bar{width:min(360px,80%);height:1px;background:rgba(233,211,181,.15);margin-bottom:28px;position:relative}
+.pp-fill{position:absolute;left:0;top:-1px;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--ember),var(--champagne));
+  width:0;transition:width 1.2s cubic-bezier(.2,.8,.2,1) .2s;box-shadow:0 0 12px rgba(233,211,181,.5)}
+.pp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:14px;width:100%}
+.stamp{
+  display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;
+  background:none;border:none;padding:0;font-family:var(--font-body);
+}
+.stamp .disc{
+  width:76px;height:76px;border-radius:50%;overflow:hidden;position:relative;
+  border:1px dashed rgba(233,211,181,.22);display:flex;align-items:center;justify-content:center;
+  transition:.3s;
+}
+.stamp .disc em{font-style:normal;font-size:9px;letter-spacing:.3em;text-indent:.3em;color:rgba(168,159,181,.45)}
+.stamp.got .disc{border:2px solid var(--champagne);box-shadow:0 0 18px rgba(233,211,181,.35);transform:rotate(-6deg)}
+.stamp.got .disc img{width:100%;height:100%;object-fit:cover}
+.stamp.got .disc::after{content:"✦";position:absolute;right:4px;bottom:2px;font-size:11px;color:var(--champagne);
+  text-shadow:0 0 6px rgba(0,0,0,.8)}
+.stamp .nm{font-family:var(--font-serif);font-style:italic;font-size:11.5px;letter-spacing:.1em;color:var(--mist)}
+.stamp.got .nm{color:var(--champagne)}
+.stamp:hover .disc{transform:scale(1.06) rotate(0)}
+
+/* ── 레이어링 추천 ── */
+.pairs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pair{
+  display:flex;align-items:center;gap:12px;text-align:left;cursor:pointer;
+  background:rgba(233,211,181,.03);border:1px solid var(--line);border-radius:14px;padding:10px 12px;
+  transition:.3s;font-family:var(--font-body);color:inherit;
+}
+.pair:hover{border-color:var(--champagne);background:rgba(233,211,181,.07);transform:translateY(-2px)}
+.pair .th{width:40px;height:58px;border-radius:7px;overflow:hidden;flex:none;
+  background:linear-gradient(160deg,#100a18,#080610);border:1px solid var(--line);display:flex;align-items:center;justify-content:center}
+.pair .th img{width:100%;height:100%;object-fit:cover}
+.pair .th span{color:var(--champagne);opacity:.6;font-size:14px}
+.pair .pn{font-family:var(--font-serif);font-style:italic;font-size:15px;letter-spacing:.08em;color:var(--champagne)}
+.pair .pt{font-size:10.5px;color:var(--mist);margin-top:3px;letter-spacing:.02em;line-height:1.4}
+.btn-share{padding:15px 24px}
 
 #quiz{
   position:fixed;inset:0;z-index:55;display:none;align-items:center;justify-content:center;
@@ -472,6 +533,10 @@ body{
   .search-box{min-width:0;width:min(52vw,220px)}
   .finder-btn{padding:11px 14px;letter-spacing:.1em}
   .finder-btn .fb-t{display:none}
+  .passport-btn b{display:none}
+  .pairs{grid-template-columns:1fr}
+  .pp-grid{grid-template-columns:repeat(3,1fr);gap:10px}
+  .stamp .disc{width:64px;height:64px}
   .profile-grid{grid-template-columns:1fr;gap:12px}
   .collection{padding:0 16px 18px}
   .hint{display:none}
@@ -517,6 +582,8 @@ body{
     </div>
     <div class="hud-right">
       <button class="finder-btn" onclick="openQuiz()">✦ <span class="fb-t">SCENT FINDER</span></button>
+      <button class="finder-btn" onclick="openDraw()" title="오늘의 향 뽑기">✧ <span class="fb-t">오늘의 향</span></button>
+      <button class="finder-btn passport-btn" onclick="openPassport()" title="향 여권">◈ <span class="fb-t">PASSPORT</span> <b id="ppCount">0/23</b></button>
       <button class="sound-toggle" id="soundToggle" onclick="toggleSound()" aria-label="배경 음악 켜기/끄기">
         <i></i><i></i><i></i>
       </button>
@@ -544,6 +611,29 @@ body{
     <div class="hint">
       DRAG TO EXPLORE<br>CLICK A COUNTRY TO ENTER
     </div>
+  </div>
+</div>
+
+<!-- ────── 오늘의 향 뽑기 ────── -->
+<div id="draw" role="dialog" aria-modal="true">
+  <button class="detail-close" onclick="closeDraw()">CLOSE ✕</button>
+  <div class="quiz-inner">
+    <p class="q-eyebrow">MEMORY DRAW</p>
+    <h3 class="q-title" id="drawTitle">당신의 다음 여행은 어디일까요</h3>
+    <div class="draw-card" id="drawCard"><div class="draw-face" id="drawFace"><span>✧</span></div></div>
+    <div id="drawResult"></div>
+  </div>
+</div>
+
+<!-- ────── SCENT PASSPORT ────── -->
+<div id="passport" role="dialog" aria-modal="true">
+  <button class="detail-close" onclick="closePassport()">CLOSE ✕</button>
+  <div class="quiz-inner pp-inner">
+    <p class="q-eyebrow">SCENT PASSPORT</p>
+    <h3 class="q-title" id="ppTitle">당신의 향 여권</h3>
+    <p class="pp-sub" id="ppSub"></p>
+    <div class="pp-bar"><div class="pp-fill" id="ppFill"></div></div>
+    <div class="pp-grid" id="ppGrid"></div>
   </div>
 </div>
 
@@ -595,9 +685,14 @@ body{
         <div class="pills" id="dMoments"></div>
         <p class="d-meta" id="dMeta"></p>
       </div>
+      <div class="pairs-sec" id="dPairsSec">
+        <p class="sec-eyebrow">PAIRS WELL WITH · 함께 레이어링</p>
+        <div class="pairs" id="dPairs"></div>
+      </div>
       <div class="d-buy">
         <span class="price" id="dPrice"></span>
         <button class="btn-buy" onclick="addToCart()">구매하기</button>
+        <button class="btn-ghost btn-share" onclick="shareScent()">공유</button>
       </div>
     </div>
   </div>
@@ -820,7 +915,7 @@ const perfumes = [
     tagline:'대나무 숲을 지나는 초록의 바람',
     story:'이른 아침의 아라시야마 대숲. 하늘까지 뻗은 대나무 사이로 바람이 지나가면, 수만 장의 댓잎이 서로 스치며 소리를 냅니다. 이끼 낀 돌길과 찻집의 말차 향, 그 서늘하고 푸른 공기를 한 병에 담았습니다.',
     poster:'kyoto.jpg', /* kyoto.png 업로드 후 파일명 입력 */
-    video:'',  /* kyoto.mp4 업로드 후 파일명 입력 */
+    video:'kyoto.mp4',  /* kyoto.mp4 업로드 후 파일명 입력 */
     bgm:'dFlDRhxR4EQ',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -839,7 +934,7 @@ const perfumes = [
     keywords:['호이안','베트남','vietnam','hoian','hoi an','올드타운','vn'],
     tagline:'노란 골목에 흐드러진 부겐빌레아',
     story:'해질녘의 호이안 올드타운. 노란 벽을 타고 오른 진분홍 부겐빌레아가 저녁 빛에 물들고, 골목 끝에서는 잘 익은 열대 과일의 달큰한 향이 흘러나옵니다. 그 노랗고 분홍했던 저녁을, 한 병에 담았습니다.',
-    poster:'hoian.jpg', video:'',
+    poster:'hoian.jpg', video:'hoian.mp4',
     bgm:'JBGhG0M11_8',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -858,7 +953,7 @@ const perfumes = [
     keywords:['하노이','베트남','vietnam','hanoi','호안끼엠','vn'],
     tagline:'안개 낀 호수, 연꽃과 커피의 아침',
     story:'이른 아침의 호안끼엠 호수. 물안개 사이로 연꽃이 피어나고, 골목 카페에서는 진한 로부스타 커피가 내려집니다. 안개와 꽃과 커피가 뒤섞이던 하노이의 아침 공기를, 한 병에 담았습니다.',
-    poster:'hanoi.jpg', video:'',
+    poster:'hanoi.jpg', video:'hanoi.mp4',
     bgm:'dFlDRhxR4EQ',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -877,7 +972,7 @@ const perfumes = [
     keywords:['하얼빈','중국','china','harbin','빙등','빙설제','cn'],
     tagline:'얼음빛으로 반짝이던 겨울밤',
     story:'영하 20도의 하얼빈. 빙등축제의 얼음 성이 푸른 빛을 내며 밤을 밝히고, 차가운 공기에는 눈 냄새와 달큰한 빙탕후루 향이 섞여 있습니다. 숨을 쉴 때마다 반짝이던 그 겨울밤을, 한 병에 가두었습니다.',
-    poster:'harbin.jpg', video:'',
+    poster:'harbin.jpg', video:'harbin.mp4',
     bgm:'dFlDRhxR4EQ',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -896,7 +991,7 @@ const perfumes = [
     keywords:['리장','여강','중국','china','lijiang','옥룡설산','고성','cn'],
     tagline:'설산 아래, 물길 따라 흐르는 옛 마을',
     story:'옥룡설산이 내려다보는 리장 고성. 골목마다 맑은 물길이 흐르고, 나무 다리 아래로 산에서 내려온 차가운 물소리가 들립니다. 찻집에서 우려낸 보이차의 깊은 향과 함께, 그 오래된 골목의 시간을 한 병에 담았습니다.',
-    poster:'lijiang.jpg', video:'',
+    poster:'lijiang.jpg', video:'lijiang.mp4',
     bgm:'JBGhG0M11_8',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -915,7 +1010,7 @@ const perfumes = [
     keywords:['서울','한국','korea','seoul','한강','kr'],
     tagline:'한강을 건너온 밤바람, 도시의 불빛',
     story:'자정 무렵의 한강. 다리 위 불빛이 강물 위에 길게 풀어지고, 강바람에는 낮의 열기가 식어가는 도시의 냄새가 섞여 있습니다. 어디를 다녀와도 결국 돌아오게 되는 곳 — 그 밤의 서울을, 한 병에 담았습니다.',
-    poster:'seoul.jpg', video:'',
+    poster:'seoul.jpg', video:'seoul.mp4',
     bgm:'dFlDRhxR4EQ',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -934,7 +1029,7 @@ const perfumes = [
     keywords:['크라비','끄라비','태국','thailand','krabi','라일레이','railay','th'],
     tagline:'석회암 절벽 아래, 에메랄드빛 바다',
     story:'롱테일 보트가 에메랄드빛 물살을 가르고, 수직으로 솟은 석회암 절벽 아래로 라일레이 해변이 펼쳐집니다. 코코넛과 소금기가 밴 뜨거운 바람, 발끝에 닿던 투명한 물. 그 눈부신 한낮의 크라비를, 한 병에 담았습니다.',
-    poster:'krabi.jpg', video:'',
+    poster:'krabi.jpg', video:'krabi.mp4',
     bgm:'JBGhG0M11_8',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -953,7 +1048,7 @@ const perfumes = [
     keywords:['구채구','주자이거우','중국','china','jiuzhaigou','오색호수','cn'],
     tagline:'숲 속에 숨겨진 오색의 호수',
     story:'구채구의 물은 믿기 어려울 만큼 투명해서, 호수 바닥에 잠긴 나무까지 그대로 비칩니다. 가을이면 단풍이 물빛에 겹쳐 다섯 가지 색으로 반짝이죠. 그 맑고 차가운 계곡의 공기를, 한 병에 담았습니다.',
-    poster:'jiuzhaigou.jpg', video:'',
+    poster:'jiuzhaigou.jpg', video:'jiuzhaigou.mp4',
     bgm:'dFlDRhxR4EQ',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -972,7 +1067,7 @@ const perfumes = [
     keywords:['타이베이','타이페이','대만','taiwan','taipei','베이터우','온천','tw'],
     tagline:'밤비 내리는 온천 마을의 따뜻한 김',
     story:'비 내리는 베이터우의 밤. 온천에서 피어오른 하얀 김이 골목을 채우고, 야시장 쪽에서는 따뜻한 음식 냄새가 흘러나옵니다. 몸도 마음도 노곤하게 풀어지던 그 밤의 온기를, 한 병에 담았습니다.',
-    poster:'taipei.jpg', video:'',
+    poster:'taipei.jpg', video:'taipei.mp4',
     bgm:'JBGhG0M11_8',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -991,7 +1086,7 @@ const perfumes = [
     keywords:['아미산','어메이샨','중국','china','emeishan','emei','금정','운해','cn'],
     tagline:'구름바다 위로 떠오르던 금빛 새벽',
     story:'새벽의 아미산 금정. 발아래로 구름바다가 끝없이 펼쳐지고, 첫 햇살이 금빛 사원 지붕에 닿는 순간 사방이 향 연기와 함께 밝아옵니다. 구름 위에서 맞이한 그 새벽을, 한 병에 담았습니다.',
-    poster:'emeishan.jpg', video:'',
+    poster:'emeishan.jpg', video:'emeishan.mp4',
     bgm:'dFlDRhxR4EQ',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -1010,7 +1105,7 @@ const perfumes = [
     keywords:['파리','프랑스','france','paris','마레','fr'],
     tagline:'비 갠 자정, 가로등 아래 젖은 돌길',
     story:'자정의 마레 지구. 방금 비가 지나간 돌길이 가로등 불빛을 머금어 반짝이고, 문 닫힌 서점 앞에는 오래된 종이 냄새가 어렴풋이 남아 있습니다. 그 새벽 파리의 우아한 고요를, 한 병에 담았습니다.',
-    poster:'paris.jpg', video:'',
+    poster:'paris.jpg', video:'paris.mp4',
     bgm:'dFlDRhxR4EQ',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -1029,7 +1124,7 @@ const perfumes = [
     keywords:['아말피','이탈리아','italy','amalfi','포지타노','positano','it'],
     tagline:'절벽 위 레몬나무, 지중해의 태양',
     story:'아말피의 절벽길. 계단식 밭을 가득 채운 레몬나무 사이로 짙푸른 지중해가 눈부시게 빛납니다. 손끝에 밴 레몬 껍질의 향과 뜨거운 태양 — 그 여름 해안의 한낮을, 한 병에 담았습니다.',
-    poster:'amalfi.jpg', video:'',
+    poster:'amalfi.jpg', video:'amalfi.mp4',
     bgm:'JBGhG0M11_8',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -1067,7 +1162,7 @@ const perfumes = [
     keywords:['마라케시','마라케쉬','모로코','morocco','marrakech','수크','ma'],
     tagline:'노을빛 광장, 향신료와 오렌지꽃의 시장',
     story:'해질녘의 제마엘프나 광장. 수크 골목마다 사프란과 시나몬이 산처럼 쌓여 있고, 담장 너머 리아드 정원에서는 오렌지 블라썸 향이 흘러나옵니다. 그 붉은 도시의 저녁을, 한 병에 담았습니다.',
-    poster:'', video:'',
+    poster:'marrakech.jpg', video:'',
     bgm:'dFlDRhxR4EQ',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -1086,7 +1181,7 @@ const perfumes = [
     keywords:['뉴욕','미국','usa','america','new york','newyork','맨해튼','us'],
     tagline:'지하 재즈바, 위스키와 낮게 흐르는 색소폰',
     story:'자정의 맨해튼, 계단 아래 스피크이지 바. 낮게 흐르는 색소폰과 잔 속에서 흔들리는 위스키, 가죽 소파에 밴 오래된 시간의 냄새. 그 밤의 뉴욕을, 한 병에 담았습니다.',
-    poster:'', video:'',
+    poster:'newyork.jpg', video:'',
     bgm:'JBGhG0M11_8',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -1105,7 +1200,7 @@ const perfumes = [
     keywords:['시드니','호주','australia','sydney','오페라하우스','au'],
     tagline:'유칼립투스 바람이 부는 항구의 아침',
     story:'이른 아침의 서큘러 키. 바다 냄새에 유칼립투스 잎의 알싸한 향이 섞여 불어오고, 오페라하우스의 흰 지붕 위로 남반구의 햇살이 쏟아집니다. 그 상쾌한 아침을, 한 병에 담았습니다.',
-    poster:'', video:'',
+    poster:'sydney.jpg', video:'',
     bgm:'dFlDRhxR4EQ',
     price:'₩128,000', size:'EAU DE PARFUM · 50ml',
     notes:[
@@ -1461,6 +1556,8 @@ function openDetail(p){
 
   detail.classList.add('open');
   currentPerfume = p;
+  renderPairs(p);
+  stampPassport(p);
 }
 let currentPerfume = null;
 
@@ -1546,6 +1643,7 @@ detail.addEventListener('click', e=>{ if (e.target === detail) closeDetail(); })
 document.addEventListener('keydown', e=>{
   if (e.key === 'Escape' && detail.classList.contains('open')) closeDetail();
   if (e.key === 'Escape' && document.getElementById('quiz').classList.contains('open')) closeQuiz();
+  if (e.key === 'Escape'){ closeDraw(); closePassport(); }
 });
 
 function addToCart(){
@@ -1675,12 +1773,144 @@ function renderQuizResult(){
   document.getElementById('qDots').innerHTML = '';
 }
 function goToScent(id){
-  closeQuiz();
+  closeQuiz(); closeDraw(); closePassport();
   const p = perfumes.find(x=>x.id===id); if (!p) return;
   const c = countries.find(x=>x.id===p.country);
   if (c){ activeCountry = c; viewLevel = 'country'; updateBreadcrumb(); renderCards(); }
   flyAndOpen(p);
 }
+
+/* ══════════ 오늘의 향 뽑기 (MEMORY DRAW) ══════════ */
+const drawEl = document.getElementById('draw');
+let drawTimer = null;
+function openDraw(){
+  drawEl.classList.add('open');
+  document.getElementById('drawTitle').textContent = '당신의 다음 여행은 어디일까요';
+  document.getElementById('drawResult').innerHTML = '';
+  const card = document.getElementById('drawCard'); card.classList.remove('settle');
+  const face = document.getElementById('drawFace');
+  const pool = perfumes.filter(p=>p.poster);
+  const pick = pool[Math.floor(Math.random()*pool.length)];
+  // 셔플 연출: 빠르게 → 점점 느리게 → 당첨 포스터에서 정지
+  let i = 0, delay = 70, steps = 0;
+  const spin = ()=>{
+    const p = pool[i % pool.length]; i++;
+    face.innerHTML = `<img src="${p.poster}" alt="">`;
+    face.classList.remove('flash'); void face.offsetWidth; face.classList.add('flash');
+    steps++;
+    if (steps < 14) delay = 70; else if (steps < 20) delay = 130; else if (steps < 24) delay = 220; else delay = 340;
+    if (steps < 27){ drawTimer = setTimeout(spin, delay); }
+    else {
+      face.innerHTML = `<img src="${pick.poster}" alt="${pick.name}">`;
+      card.classList.add('settle');
+      document.getElementById('drawTitle').textContent = '오늘, 당신에게 닿은 기억';
+      document.getElementById('drawResult').innerHTML = `
+        <div class="draw-meta">
+          <p class="no">${pick.no} · ${pick.country}</p>
+          <h3 class="q-r-name">${pick.name}</h3>
+          <p class="q-r-tag">${pick.tagline}</p>
+          <div class="q-r-btns">
+            <button class="btn-buy" onclick="goToScent('${pick.id}')">지구본에서 만나기</button>
+            <button class="btn-ghost" onclick="openDraw()">다시 뽑기</button>
+          </div>
+        </div>`;
+    }
+  };
+  clearTimeout(drawTimer); spin();
+}
+function closeDraw(){ clearTimeout(drawTimer); drawEl.classList.remove('open'); }
+drawEl.addEventListener('click', e=>{ if (e.target === drawEl) closeDraw(); });
+
+/* ══════════ SCENT PASSPORT (여권 도장) ══════════ */
+const PP_KEY = 'not_passport_v1';
+function ppLoad(){ try{ return JSON.parse(localStorage.getItem(PP_KEY)||'[]'); }catch(e){ return []; } }
+function ppSave(a){ try{ localStorage.setItem(PP_KEY, JSON.stringify(a)); }catch(e){} }
+function ppRefreshBadge(){
+  const n = ppLoad().filter(id=>perfumes.some(p=>p.id===id)).length;
+  const b = document.getElementById('ppCount'); if (b) b.textContent = n+'/'+perfumes.length;
+}
+function stampPassport(p){
+  const got = ppLoad();
+  if (got.includes(p.id)) return;
+  got.push(p.id); ppSave(got); ppRefreshBadge();
+  const n = got.length;
+  setTimeout(()=> toast(n===perfumes.length
+    ? '✦ 모든 기억을 수집했습니다 — 23개의 도시, 하나의 여권'
+    : `✦ ${p.name} 도장 획득 · ${n}/${perfumes.length}`), 900);
+}
+const ppEl = document.getElementById('passport');
+function openPassport(){
+  const got = ppLoad();
+  const n = got.filter(id=>perfumes.some(p=>p.id===id)).length;
+  document.getElementById('ppSub').textContent =
+    n===0 ? '아직 어떤 도시에도 다녀오지 않았어요. 향을 열어보면 도장이 찍힙니다.'
+    : n===perfumes.length ? '모든 기억을 수집했습니다. 23개의 도시가 당신의 여권에 남았어요.'
+    : `${n}개의 기억을 수집했어요 · ${perfumes.length-n}개의 도시가 남았습니다`;
+  document.getElementById('ppGrid').innerHTML = perfumes.map(p=>{
+    const has = got.includes(p.id);
+    return `<button class="stamp ${has?'got':''}" onclick="goToScent('${p.id}')" title="${p.name}">
+      <span class="disc">${has ? (p.poster?`<img src="${p.poster}" alt="">`:'<em>✦</em>') : '<em>'+p.no.replace('MEMORY ','')+'</em>'}</span>
+      <span class="nm">${p.name}</span>
+    </button>`;
+  }).join('');
+  ppEl.classList.add('open');
+  requestAnimationFrame(()=>{ document.getElementById('ppFill').style.width = (n/perfumes.length*100)+'%'; });
+}
+function closePassport(){ ppEl.classList.remove('open'); document.getElementById('ppFill').style.width='0'; }
+ppEl.addEventListener('click', e=>{ if (e.target === ppEl) closePassport(); });
+ppRefreshBadge();
+
+/* ══════════ 레이어링 추천 (향 성격 벡터 최근접) ══════════ */
+function renderPairs(p){
+  const sec = document.getElementById('dPairsSec');
+  if (!p.profile){ sec.style.display='none'; return; }
+  const keys=['fresh','floral','woody','sweet'];
+  const dist = q => Math.sqrt(keys.reduce((a,k)=>a+Math.pow((p.profile[k]||0)-(q.profile[k]||0),2),0));
+  const near = perfumes.filter(q=>q.id!==p.id && q.profile).sort((a,b)=>dist(a)-dist(b)).slice(0,2);
+  document.getElementById('dPairs').innerHTML = near.map(q=>`
+    <button class="pair" onclick="switchScent('${q.id}')">
+      <span class="th">${q.poster?`<img src="${q.poster}" alt="">`:'<span>✦</span>'}</span>
+      <span><span class="pn">${q.name}</span><br><span class="pt">${q.tagline}</span></span>
+    </button>`).join('');
+  sec.style.display='block';
+}
+// 상세 안에서 다른 향으로 바로 전환 (비행 없이)
+function switchScent(id){
+  const q = perfumes.find(x=>x.id===id); if (!q) return;
+  const c = countries.find(x=>x.id===q.country);
+  if (c){ activeCountry = c; viewLevel='country'; updateBreadcrumb(); renderCards(); }
+  playBgmFor(q);
+  const info = document.querySelector('.d-info'); if (info) info.scrollTop = 0;
+  openDetail(q);
+}
+
+/* ══════════ 공유 링크 + 딥링크 ══════════ */
+function shareScent(){
+  const p = currentPerfume; if (!p) return;
+  const url = location.origin + location.pathname + '#scent=' + p.id;
+  const done = ()=> toast(`✦ ${p.name} 링크가 복사되었어요`);
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(done).catch(()=>{ window.prompt('링크를 복사하세요', url); });
+  } else window.prompt('링크를 복사하세요', url);
+}
+function scentFromHash(){
+  const m = location.hash.match(/scent=([a-z]+)/); return m ? perfumes.find(p=>p.id===m[1]) : null;
+}
+(function deepLink(){
+  const p = scentFromHash(); if (!p) return;
+  // 공유 링크로 들어오면 인트로를 건너뛰고 바로 그 향으로
+  setTimeout(()=>{ enterSite(); setTimeout(()=>goToScent(p.id), 900); }, 300);
+})();
+window.addEventListener('hashchange', ()=>{ const p=scentFromHash(); if (p) goToScent(p.id); });
+
+/* ══════════ 키보드: 상세에서 ← → 로 이전/다음 향 ══════════ */
+document.addEventListener('keydown', e=>{
+  if (!detail.classList.contains('open') || !currentPerfume) return;
+  if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+  const i = perfumes.findIndex(p=>p.id===currentPerfume.id);
+  const n = (i + (e.key==='ArrowRight'?1:-1) + perfumes.length) % perfumes.length;
+  switchScent(perfumes[n].id);
+});
 
 /* ══════════ 토스트 ══════════ */
 let toastTimer;
